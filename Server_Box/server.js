@@ -1,5 +1,6 @@
 //box : 192.168.1.31
-const local = require('./local.js');
+//const local = require('./local.js');
+const adr_camera = "172.16.57.16"
 const express = require("express");
 const {createServer} = require("http");
 const {Server} = require("socket.io");
@@ -10,7 +11,8 @@ const io = new Server(httpServer);
 const port = 5000
 
 const io_client = require("socket.io-client");
-const socket_client = io_client("http://"+local.adr_camera+":"+port);
+console.log("http://"+adr_camera+":"+port);
+const socket_client = io_client("http://"+adr_camera+":"+port);
 
 httpServer.listen(port);
 
