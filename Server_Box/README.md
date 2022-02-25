@@ -3,6 +3,16 @@
 
 ## Service 
 
+Before launch service, several packages must be installed like this :
+
+`pip3 install flask flask_restful`
+
+`pip3 install waitress`
+
+`pip3 install pyopenssl`
+
+We can launch service :
+
 `python3 service.py`
 
 GET /wifi
