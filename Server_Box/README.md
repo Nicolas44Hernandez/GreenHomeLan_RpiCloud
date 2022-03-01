@@ -30,8 +30,9 @@ POST /leases
 
 ## IP posting
 
-`python3 postMyIp.py`
+In the first time, micro-service must be launched `python3 service.py` on the rpi_cloud. Then, we can activate the IP Posting by : 
 
+`python3 postMyIp.py`
 
 ## Install Python Bluetooth
 

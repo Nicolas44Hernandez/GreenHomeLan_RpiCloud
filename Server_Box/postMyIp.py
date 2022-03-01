@@ -5,7 +5,8 @@ import json
 import urllib.parse
 import subprocess
 
-MSERV_ADR   = "http://172.16.57.126:8000"
+#MSERV_ADR   = "http://172.16.57.126:8000"
+MSERV_ADR   = "http://192.168.1.29:8000"
 
 def readMyIp():
     allMyIps = subprocess.Popen("hostname -I", shell=True, stdout=subprocess.PIPE).stdout.read().strip().decode("utf-8").split()
