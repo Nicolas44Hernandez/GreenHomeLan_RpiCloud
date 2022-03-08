@@ -1,4 +1,4 @@
-tmus-*.log
+tmux-*.log
 Server_Cloud/node_modules/*
 Server_Cloud/package-lock.json
 Server_Cloud/package.json
