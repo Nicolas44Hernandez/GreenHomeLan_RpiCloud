@@ -12,21 +12,49 @@ import time
 from waitress import serve
 import subprocess
 import re
+import logging
+import threading
+
+# Thread to monitor Thread
+pinger = None
+
+class pingMonitor (threading.Thread):
+    NB_MAX_DEFECT = 5
+    def __init__(self, threadID, name, delay, defectHanlder):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.delay = delay
+        self.counter = self.NB_MAX_DEFECT
+        self.defectHanlder = defectHanlder
+        self.running = True
+        self.monitor = False
+    def startMonitor(self):
+        self.monitor = True
+        self.counter = self.NB_MAX_DEFECT
+    def stopMonitor(self):
+        self.monitor = False
+    def pingReceived(self):
+        logging.info("ping received by thread")
+        self.counter = self.NB_MAX_DEFECT
+    def stop(self):
+        self.running = False
+    def run(self):
+        logging.info("Starting " + self.name)
+        while (self.running):
+            if self.monitor : 
+                if (self.counter != self.NB_MAX_DEFECT):
+                    logging.info(f"WARNING {self.NB_MAX_DEFECT-self.counter} missed ping. {self.counter} more before table reset.")
+                self.counter -= 1
+                if (self.counter == 0)  :
+                    self.defectHanlder()
+                    self.stopMonitor()
+            time.sleep(self.delay)
+        logging.info("Exiting " + self.name)
+
 
 app = Flask(__name__)
 api = Api(app)
-
-# BOXES_IP = {
-#     'box_name': 'box_ip',
-# }
-# STORAGE_FILE = 'boxesip.json'
-
-# def abort_if_migration_doesnt_exist(box_name):
-#     if box_name not in BOXES_IP:
-#         abort(404, message="Box {} doesn't exist".format(box_name))
-
-
-
 
 def getArpConnected():
 
@@ -109,7 +137,7 @@ def getIpTablesNatPreroutingRules():
 def deleteIpTablePreroutingRule(ruleNumber):
     # sudo iptables -t nat -D PREROUTING 1
     cmd = ["sudo", "iptables", "-t", "nat", "-D", "PREROUTING", str(ruleNumber)]
-    # print (cmd)
+    print (cmd)
     subprocess.call(cmd)
 
 
@@ -135,37 +163,11 @@ parser.add_argument('ip')
 
 
 
-# Migration
-# shows a single migration item and lets you delete a migration item
-# class BoxIp(Resource):
-#     def get(self, box_name):
-#         abort_if_migration_doesnt_exist(box_name)
-#         return BOXES_IP[box_name]
-
-#     def delete(self, box_name):
-#         abort_if_migration_doesnt_exist(box_name)
-#         del BOXES_IP[box_name]
-#         with open(STORAGE_FILE, 'w') as f: f.write(json.dumps(BOXES_IP))
-#         return '', 204
-
-#     def put(self, box_name):
-#         args = parser.parse_args()
-#         theBox = BOXES_IP[box_name]
-#         task = {
-#             'migration_id' : theBox['migration_id'],
-#             'date': theBox['date'],
-#             'timestamp':theBox['timestamp'], 
-#             'ip': args['ip'], 'clientID': args['clientId'], 'serial': args['serial'], 
-#             'BUname' : args['BUname'], 'apn': args['apn'],
-#             'result':args['result']
-#         }
-#         BOXES_IP[migration_id] = task
-#         with open(STORAGE_FILE, 'w') as f: f.write(json.dumps(BOXES_IP))
-#         return task, 201
 def removeRules():
+    logging.info("Deleting routing rules from iptables")
     del_count = 0
     for rul in getIpTablesNatPreroutingRules():
-        print ("deleting ", rul["num"])
+        logging.info(f"deleting {rul['num']}")
         deleteIpTablePreroutingRule(int(rul["num"]) - del_count)
         del_count+= 1
 
@@ -173,16 +175,16 @@ def createRules():
     connecteds = getArpConnected()
     nbRetry = 10
     while (len (connecteds) == 0) and (nbRetry > 0):
-        print (f"attempt {nbRetry}")
+        logging.info(f"attempt {nbRetry}")
         connecteds = getArpConnected()
         nbRetry -=1
         time.sleep(1)
     print (connecteds)
     if (len (connecteds) != 0):
-        print ("routing http traffic to ", connecteds[0] ['ip'])
+        logging.info(f"routing http traffic to {connecteds[0] ['ip']}")
         createNatPreroutingRules(connecteds[0] ['ip'])
     else:
-        print ("unable to create routing rules")
+        logging.info("unable to create routing rules")
 
 
 # MigrationList
@@ -197,9 +199,9 @@ class Wifi(Resource):
     def post(self):
         args = parser.parse_args()
         # migration_id = int(max(BOXES_IP.keys()).lstrip('migration_')) + 1
-        print (f"Args are {args}")
+        logging.info(f"Args are {args}")
         command = args['command']
-        print (f"command is {command}")
+        logging.info(f"command is {command}")
         # txt_migration_id = 'migration_%05d' % migration_id
         # datim = datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
         # timestamp = round(time.time() * 1000)
@@ -212,29 +214,35 @@ class Wifi(Resource):
             subprocess.call(["sudo", "service", "hostapd", "stop"])
             removeRules()
         else:
-            print ("Unknown command : {command}")
+            logging.error(f"Unknown command : {command}")
 
         # with open(STORAGE_FILE, 'w') as f: f.write(json.dumps(BOXES_IP))
         return self.get(), 201
 
+class Ping(Resource):
+    def post(self):
+        global pinger
+        logging.info("ping received")
+        pinger.pingReceived()
+        return '{"ping":"pong"}', 201
 
-# MigrationList
-# shows a list of all BOXES_IP, and lets you POST to add new tasks
+
 class Leases(Resource):
     def get(self):
         return getArpConnected()
     def post(self):
         args = parser.parse_args()
-        # migration_id = int(max(BOXES_IP.keys()).lstrip('migration_')) + 1
-        print (f"Args are {args}")
+        logging.info(f"Args are {args}")
         command = args['command']
         lease_ip = args['ip']
         if (command == "route"):
-            print (f"ip of lease is {lease_ip}")
+            logging.info(f"ip of lease is {lease_ip}")
+            pinger.startMonitor()
             createNatPreroutingRules(lease_ip)
             return '{"status":"routed", "ip":"{lease_ip}"}', 201
         else:
-            print (f"removing route")
+            logging.info(f"removing route")
+            pinger.stopMonitor()
             removeRules()
             return '{"status":"unrouted"}', 201
 
@@ -243,23 +251,24 @@ class Leases(Resource):
 ##
 api.add_resource(Wifi, '/wifi')
 api.add_resource(Leases, "/leases")
-
-#api.add_resource(DesactivateWifi, '/desactivate_wifi')
-#api.add_resource(BoxIp, '/boxes_ip/<box_name>')
+api.add_resource(Ping, "/ping")
 
 @app.after_request
 def after_request(response):
   response.headers.add('Access-Control-Allow-Origin', '*')
   response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-#   response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
   response.headers.add('Access-Control-Allow-Methods', 'GET,POST')
   return response
 
+
+
 if __name__ == '__main__':
-    # if (os.path.isfile(/run/hostapd.pid) ):
-    #     BOXES_IP = json.loads(open(STORAGE_FILE, 'r').read())
-        
-    #app.run(debug=False, host ='0.0.0.0', port=443, ssl_context=('cert.pem', 'key.pem'))
-    print ("starting app ")
+
+    logging.basicConfig(format="%(asctime)s: %(message)s", level=logging.INFO, datefmt="%H:%M:%S")
+
+    logging.info("starting threads")
+    pinger = pingMonitor(1, "Pinger", 5, removeRules)
+    pinger.start()
+
+    logging.info("starting app ")
     app.run(debug=True, host ='0.0.0.0', port=8008)
-    # serve(app, host='0.0.0.0', port=8008)
