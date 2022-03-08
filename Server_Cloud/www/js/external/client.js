@@ -1,6 +1,3 @@
-
-
-
 var socket;
 var box_name = "rpi_box";
 var ip_of_box;
@@ -12,7 +9,8 @@ var nbScan = 0;
 
 
 function retrieveBoxIp (onFinishHandler, boxName) {
-  var url = "http://172.16.57.126:8000/boxes_ip/"+boxName; //+encodeURIComponent(stream_id) + formatted_params;
+  //var url = "http://172.16.57.126:8000/boxes_ip/"+boxName; //+encodeURIComponent(stream_id) + formatted_params;
+  var url = "http://192.168.1.29:8000/boxes_ip/"+boxName; //+encodeURIComponent(stream_id) + formatted_params; (adresse du cloud)
 
   let request = new XMLHttpRequest()
 
@@ -96,6 +94,7 @@ function processWifiLeases (leases){
     console.log("leases 0 ip: " + leases[0]["ip"] + ", mac " + leases[0]["mac"])
     var el_up = document.getElementById("LeaseInfo");
     el_up.innerText = "lease ip " + leases[0]["ip"] + " has MAC " + leases[0]["mac"];
+    //activateRoutes (leases[0]["ip"])
     var el_up = document.getElementById("LaunchViewing");
     el_up.innerHTML = "<div onclick=\"openInNewTab('http://'+ ip_of_box+':4000');\">ViewCam</div>"
 
@@ -119,6 +118,30 @@ function retrieveWifiLeases (onFinishHandler, boxIp){
   
   xhr.send();
 }
+
+function activateRoutes (ipadr){
+  var url = "http://"+ip_of_box+":8008/leases"; //+encodeURIComponent(stream_id) + formatted_params;
+  var xhr = new XMLHttpRequest();
+
+  url = url + "?ip="+ipadr+"&command=route"
+
+  //http://172.16.57.129:8008/leases?ip=192.168.4.18&command=route
+
+  // xhr.withCredentials = true;
+  
+  xhr.addEventListener("readystatechange", function() {
+    if(this.readyState === 4) {
+      console.log(this.responseText);
+      retrieveWifiStatus (onFinishHandler=processWifiStatus, boxIp=ip_of_box)
+    }
+  });
+  console.log(url)
+  xhr.open("POST", url);
+  
+  xhr.send();
+}
+
+
 
 function switchWifiStatus () {
   var url = "http://"+ip_of_box+":8008/wifi"; //+encodeURIComponent(stream_id) + formatted_params;
