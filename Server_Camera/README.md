@@ -1,4 +1,12 @@
 
+
+## Installation
+
+`pip3 install asyncssh`
+
+
+
+
 Se placer dans le répertoire 
 camera/Server_Camera 
 
