@@ -226,14 +226,20 @@ ensuite :
 à copier / coller	
 
 ```
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=FR
+# AP scanning
+ap_scan=1
 network={
 ssid="rpibox"
-psk="greenhomelan"
+psk="mot2passe"
 proto=RSN
 key_mgmt=WPA-PSK
 pairwise=CCMP
 auth_alg=OPEN
-}		
+}
+	
 ```
 Après un reboot du rpi_camera, ce raspberrypi se connectera automatiquement en wifi sur le rpi_box
 
