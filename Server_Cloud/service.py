@@ -33,7 +33,7 @@ parser.add_argument('ip')
 class BoxIp(Resource):
     def get(self, box_name):
         abort_if_migration_doesnt_exist(box_name)
-        return BOXES_IP[box_name]
+        return BOXES_IP[box_name], 200
 
     def delete(self, box_name):
         abort_if_migration_doesnt_exist(box_name)
