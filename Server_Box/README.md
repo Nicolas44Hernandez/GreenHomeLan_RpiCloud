@@ -1,6 +1,35 @@
+## changement depuis la dernière version
+server_box.js intègre toutes les fonctionnalités de :
+- service.py
+- postMyIp.py
+
+l'objectif étant de lancer server_box.js au démarrage de la machine tout se fait automatiquement
+Les différents fichiers supprimés sont : 
+- service.py
+- postMyIp.py
+- local.py
+- local.js
+
+Remarque importante : 
+Pour que la fonction postMyIp soit automatique, il faut renseigner
+
+Before to launch server_box.js, indicate on MSERV_ADR variable, the adress mac of the rpi_cloud, in order to select correctly url depending of the developper (Jean-Baptiste, David)
+
+List of npm install
+- npm install nodemon
+- npm install express
+- npm install cors   
+- npm install axios
+
+To launch server_cloud
+
+`nodemon server_box.js`
 
 
 
+
+
+All Information below are obsolete:
 ## Service 
 
 Before launch service, several packages must be installed like this :
