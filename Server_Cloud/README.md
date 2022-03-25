@@ -1,25 +1,25 @@
-## Configuration
-Modify line10 of client.js by indicating ip local adress
+## changement depuis la dernière version
+L'objectif est de simplifier la mise en route du server et de diminuer le nombre de fichier
+service.py et server.js ont fusionné dans server_cloud.js
+- on peut donc supprimer les fichiers suivants : 
+    - server.js
+    - service.py (attendre de vérifier que l'ensemnble des fonctionnalités ont été intégré dans server_cloud.js)
 
-## Micro Service
-python3 service.py
 
-GET /boxes_ip/<box_name>
+List of npm install
+- npm install nodemon
+- npm install express
+- npm install cors   
 
-"172.16.57.129"
+To launch server_cloud
 
-POST /boxes_ip
-{"name":"box_name", 'ip':'box_ip'}
-
-## Serveur Web
-lancer : node server.js
-remarque importante : python3 server.py est maintenant obsolète et remplacé par server.js
-
+`nodemon server_cloud.js`
 ## Site Web
 sur un navigateur accéder au service wifi et video via l'adress du cloud par : 
-http://172.16.57.126:8080/ (pour JB)
+http://172.16.57.126:8000/ (pour JB)
 ou
-http://192.168.1.29:8080/  (pour David)
-
-
-
+http://192.168.1.29:8000/  (pour David)
+Attention le numéro de port à changer
+## remarques générales
+- npm install --save cors pour server_cloud.js
+- Modify line10 of client.js by indicating ip local adress
