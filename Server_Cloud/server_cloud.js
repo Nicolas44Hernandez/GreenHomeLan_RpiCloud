@@ -3,7 +3,7 @@ const cors = require('cors');
 const fs = require('fs');
 const app = express()
 const port = 8000
-let json
+let json = {}
 const path = './boxesip.json';
 const bodyParser = require('body-parser')
 
@@ -16,15 +16,18 @@ function FileExist(){
     if (fs.existsSync(path)) {
         json = require(path);
         console.log(json)
+        return true
     }
     else{
-        console.log('boxesip.json not exist launch postMyIp.py form rpi_box')
+        console.log('boxesip.json not exist launch server_box.js before')
+        return false
     }
 }
 
 app.get('/boxes_ip/:box_name', (req, res) => {
     const name_box  = req.params[Object.keys(req.params)[0]]
-    res.send(JSON.stringify(json[name_box]))
+    if (FileExist())
+        res.send(JSON.stringify(json[name_box]))
   })
 
 app.post('/boxes_ip', (req, res) => {
@@ -37,5 +40,3 @@ app.post('/boxes_ip', (req, res) => {
 app.listen(port, () => {
     console.log(`Server cloud listening on port ${port}`)
 })
-
-FileExist()
