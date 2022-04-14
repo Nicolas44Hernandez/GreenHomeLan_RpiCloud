@@ -1,0 +1,258 @@
+{
+	"info": {
+		"_postman_id": "2a77d1d9-2881-4b39-8f68-adc5768e28dd",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "routeLease",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.31:8008/leases?ip=192.168.4.12&command=route",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"31"
+					],
+					"port": "8008",
+					"path": [
+						"leases"
+					],
+					"query": [
+						{
+							"key": "ip",
+							"value": "192.168.4.12"
+						},
+						{
+							"key": "command",
+							"value": "route"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unrouteLease",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.31:8008/leases?command=unroute",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"31"
+					],
+					"port": "8008",
+					"path": [
+						"leases"
+					],
+					"query": [
+						{
+							"key": "command",
+							"value": "unroute"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ping",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.31:8008/ping",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"31"
+					],
+					"port": "8008",
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "command=activate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.31:8008/wifi?command=activate",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"31"
+					],
+					"port": "8008",
+					"path": [
+						"wifi"
+					],
+					"query": [
+						{
+							"key": "command",
+							"value": "activate"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "command=desactivate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.31:8008/wifi?command=desactivate",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"31"
+					],
+					"port": "8008",
+					"path": [
+						"wifi"
+					],
+					"query": [
+						{
+							"key": "command",
+							"value": "desactivate"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "boxes_ip",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "rpi_box",
+							"type": "text"
+						},
+						{
+							"key": "ip",
+							"value": "192.168.1.31",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://192.168.1.29:8000/boxes_ip",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"29"
+					],
+					"port": "8000",
+					"path": [
+						"boxes_ip"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "boxes_ip/rpi_box",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.29:8000/boxes_ip/rpi_box",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"29"
+					],
+					"port": "8000",
+					"path": [
+						"boxes_ip",
+						"rpi_box"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "wifi",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.31:8008/wifi",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"31"
+					],
+					"port": "8008",
+					"path": [
+						"wifi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "leases",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.1.31:8008/leases",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"1",
+						"31"
+					],
+					"port": "8008",
+					"path": [
+						"leases"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
