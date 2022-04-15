@@ -1,9 +1,3 @@
-/*
-@copyright: Copyright (c) 2021, Enguerrand Quilliard - All rights reserved
-@attention: Confidential
-@authors: Enguerrand Quilliard
-*/
-
 // Update frame
 function update(){
     console.log("Updating...")
@@ -18,7 +12,7 @@ function update(){
             console.log("Timeout");
             update();
         },
-        timeout: 100
+        timeout: 50
     });
 }
 

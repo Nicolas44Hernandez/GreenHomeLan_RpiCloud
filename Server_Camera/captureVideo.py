@@ -9,7 +9,7 @@ import local
 TMP_PATH = "tmp.jpg"
 FPS = 10
 PICTURE_RATIO = 0.5
-MAIN_URL = "http://"+local.adr_cam+":5000"
+MAIN_URL = "http://"+local.adr_cam+":4000"
 
 # Unique camera id
 def get_id():
