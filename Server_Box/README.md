@@ -20,8 +20,9 @@ List of npm install
 - npm install express
 - npm install cors   
 - npm install axios
+- npm install onoff
 
-To launch server_cloud
+To launch server_box
 
 `nodemon server_box.js`
 
@@ -80,3 +81,7 @@ sudo python3 setup.py install
 
 sudo pip3 install bluepy
 
+## Install bluettoh for nodejs
+
+sudo apt-get install bluetooth bluez libbluetooth-dev libudev-dev
+sudo npm i bluetooth-hci-socket

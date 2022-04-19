@@ -4,6 +4,8 @@ const fs = require('fs');
 const cors = require('cors');
 const exec = require('child_process').exec;
 const util = require("util");
+const Gpio = require('onoff').Gpio; 
+
 
 const app = express()
 const execProm = util.promisify(exec);
@@ -17,11 +19,32 @@ const MSERV_ADR   = {
 let stopTable = false;
 let timer;
 
-
-
 app.use(cors());
-setStopListener();
-postMyIp()
+
+
+const button = new Gpio(26, 'in', 'both');
+button.watch((err, value) => {
+    if (err) {
+        throw err;
+    }
+    console.log('appuie')
+    if(setWifiOn()){
+        console.log("wifi on")
+    }
+}); 
+
+process.on('SIGINT', _ => {
+    button.unexport();
+});
+
+async function setWifiOn(){
+    let command = `rfkill unblock wifi`
+    await execProm(command);
+    command = `rfkill list wifi`
+    let out = await execProm(command);
+    return out["stdout"].split('\n')[1].includes('no')
+}
+
 
 function postMyIp(){
     getMyMacAdress().then(mac => {
@@ -41,7 +64,7 @@ async function getMyIp(){
     let out = await execProm(command);
     return out["stdout"].split(' ')[2].replace('\n',''); 
 }
-
+ 
 async function getMyMacAdress(){
     let command = `arp -a | cut -d' ' -f 4`
     let out = await execProm(command);
@@ -52,6 +75,7 @@ async function getMyMacAdress(){
         }
     }
 }
+ 
 
 async function getArpConnected() {
     let result;
@@ -155,9 +179,11 @@ app.post('/ping', (req, res) => {
     clearTimeout(timer);
     timer = setTimeout(() => stopTable = true, DELAY);
     res.send('{"ping":"pong"}')
-});
+}); 
 
 app.listen(port, () => {
     console.log(`Server cloud listening on port ${port}`)
 });
 
+setStopListener();
+postMyIp()
