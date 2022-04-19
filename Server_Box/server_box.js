@@ -30,6 +30,7 @@ button.watch((err, value) => {
     console.log('appuie')
     if(setWifiOn()){
         console.log("wifi on")
+        notifyMyWifi()
     }
 }); 
 
@@ -58,7 +59,18 @@ function postMyIp(){
         }); 
     });          
 }
-
+function notifyMyWifi(){
+    getMyMacAdress().then(mac => {
+        let url_cloud = MSERV_ADR[mac] + "/notify_wifi";
+        console.log(url_cloud)
+        getMyIp().then(my_ip => {
+            axios.post(url_cloud, {
+                ip: my_ip,
+                name:"rpi_box"
+              })
+        }); 
+    });          
+}
 async function getMyIp(){
     let command = ` ifconfig | awk '/^eth0/ { iface = $1; getline; sub("addr:", ""); print iface, $1, $2 }'`
     let out = await execProm(command);
