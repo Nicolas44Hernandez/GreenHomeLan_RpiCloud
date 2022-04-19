@@ -36,7 +36,12 @@ app.post('/boxes_ip', (req, res) => {
     fs.writeFile(("boxesip.json"), dictstring, () => {})
     res.status(201).json(dict)
 })
-
+app.post('/notify_wifi', (req, res) => {
+    const dict = {box_name:req.body.name, rpi_box:req.body.ip};
+    const dictstring = JSON.stringify(dict)
+    console.log('wifi is activated on '+dictstring)
+    res.status(201).json(dict)
+})
 app.listen(port, () => {
     console.log(`Server cloud listening on port ${port}`)
 })
