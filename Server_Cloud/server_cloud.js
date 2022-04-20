@@ -30,6 +30,11 @@ app.get('/boxes_ip/:box_name', (req, res) => {
         res.send(JSON.stringify(json[name_box]))
   })
 
+app.get('/sms', (req, res) => {
+    // Ecrire à la partie SMS à envoyé
+    res.status(201).json("sms envoyé")
+  })
+
 app.post('/boxes_ip', (req, res) => {
     const dict = {box_name:req.body.name, rpi_box:req.body.ip};
     const dictstring = JSON.stringify(dict)
