@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors');
 const fs = require('fs');
+const nodemailer = require('nodemailer');
 const app = express()
 const port = 8000
 let json = {}
@@ -11,6 +12,21 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(express.static(__dirname + '/www'));
+
+let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'ghomelan@gmail.com',
+      pass: 'greenhomelanorange'
+    }
+  });
+  
+let mailOptions = {
+    from: 'ghomelan@gmail.com',
+    to: 'ghomelan@gmail.com',
+    subject: 'Sending Email using Node.js',
+    text: 'That was easy!'
+  };
 
 function FileExist(){
     if (fs.existsSync(path)) {
@@ -30,9 +46,15 @@ app.get('/boxes_ip/:box_name', (req, res) => {
         res.send(JSON.stringify(json[name_box]))
   })
 
-app.get('/sms', (req, res) => {
-    // Ecrire à la partie SMS à envoyé
-    res.status(201).json("sms envoyé")
+app.get('/email', (req, res) => {
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+    res.status(201).json("email envoyé")
   })
 
 app.post('/boxes_ip', (req, res) => {
