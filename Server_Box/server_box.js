@@ -4,6 +4,7 @@ const fs = require('fs');
 const cors = require('cors');
 const exec = require('child_process').exec;
 const util = require("util");
+const { clear } = require('console');
 const Gpio = require('onoff').Gpio; 
 
 
@@ -11,6 +12,7 @@ const app = express()
 const execProm = util.promisify(exec);
 const DELAY = 5000
 const port = 8008
+let arpInterval;
 
 const MSERV_ADR   = {
     "e4:5f:01:0e:34:3f" : "http://192.168.1.29:8000",
@@ -22,16 +24,10 @@ let timer;
 app.use(cors());
 
 
-const button = new Gpio(26, 'in', 'both');
+const button = new Gpio(26, 'in', 'rising', {debounceTimeout: 20});
 button.watch((err, value) => {
-    if (err) {
-        throw err;
-    }
-    console.log('appuie')
-    if(setWifiOn()){
-        console.log("wifi on")
-        notifyMyWifi()
-    }
+    console.log('appui sur bouton BLE pour activer le wifi du rpibox')
+    setWifiOn() 
 }); 
 
 process.on('SIGINT', _ => {
@@ -39,13 +35,21 @@ process.on('SIGINT', _ => {
 });
 
 async function setWifiOn(){
-    let command = `rfkill unblock wifi`
+    let command = `sudo service hostapd start`
+    exec(command);
+    console.log("wifi on");
+    notifyMyWifi();
+    arpInterval = setInterval(checkConnection, 250)
+}
+
+async function setWifiOff(){
+    let command = `rfkill block wifi` 
     await execProm(command);
     command = `rfkill list wifi`
     let out = await execProm(command);
-    return out["stdout"].split('\n')[1].includes('no')
+    return out["stdout"].split('\n')[1].includes('yes')
 }
-
+ 
 
 function postMyIp(){
     getMyMacAdress().then(mac => {
@@ -57,7 +61,7 @@ function postMyIp(){
                 name:"rpi_box"
               })
         }); 
-    });          
+    });           
 }
 function notifyMyWifi(){
     getMyMacAdress().then(mac => {
@@ -87,9 +91,39 @@ async function getMyMacAdress(){
         }
     }
 }
- 
 
-async function getArpConnected() {
+function checkConnection(){     // 
+    console.log('check connection')
+    let command = `awk '$4~/[1-9a-f]+/&&$6~/^wl/{print "ip: "$1" mac: "$4}' /proc/net/arp`;
+    let out = exec(command, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`);
+          return;
+        }
+        if(stdout){
+            clearInterval(arpInterval);
+            console.log(`Connexion établie`);
+            sendRequestForSms()  // Envoie un POST Contact SMS user tel
+        }
+    });
+}
+
+function sendRequestForSms(){
+    getMyMacAdress().then(mac => {
+        let url_cloud = MSERV_ADR[mac] + "/sms";
+        console.log(url_cloud)
+        axios.get(url_cloud)
+        .then((res) => {
+            console.log(res.data);
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+    });
+} 
+
+async function getArpConnected() { 
     let result;
     let temp;
     let command = `awk '$4~/[1-9a-f]+/&&$6~/^wl/{print "ip: "$1" mac: "$4}' /proc/net/arp`;
