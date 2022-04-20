@@ -43,11 +43,12 @@ async function setWifiOn(){
 }
 
 async function setWifiOff(){
-    let command = `rfkill block wifi` 
-    await execProm(command);
-    command = `rfkill list wifi`
-    let out = await execProm(command);
-    return out["stdout"].split('\n')[1].includes('yes')
+    let command = `sudo service hostapd stop`
+    getArpConnected()
+    //exec(command);
+    //console.log("wifi off");
+    //notifyMyWifi();
+    //arpInterval = setInterval(checkConnection, 250)
 }
  
 
@@ -63,7 +64,7 @@ function postMyIp(){
         }); 
     });           
 }
-function notifyMyWifi(){
+function notifyMyWifi(){    // A vérifier si utile
     getMyMacAdress().then(mac => {
         let url_cloud = MSERV_ADR[mac] + "/notify_wifi";
         console.log(url_cloud)
@@ -90,12 +91,12 @@ async function getMyMacAdress(){
             return  mac
         }
     }
-}
+} 
 
 function checkConnection(){     // 
     console.log('check connection')
     let command = `awk '$4~/[1-9a-f]+/&&$6~/^wl/{print "ip: "$1" mac: "$4}' /proc/net/arp`;
-    let out = exec(command, (error, stdout, stderr) => {
+    exec(command, (error, stdout, stderr) => {
         if (error) {
           console.error(`exec error: ${error}`);
           return;
@@ -103,27 +104,44 @@ function checkConnection(){     //
         if(stdout){
             clearInterval(arpInterval);
             console.log(`Connexion établie`);
-            sendRequestForSms()  // Envoie un POST Contact SMS user tel
+            sendRequestForEmail()  
         }
     });
 }
 
-function sendRequestForSms(){
+function sendRequestForEmail(){
     getMyMacAdress().then(mac => {
-        let url_cloud = MSERV_ADR[mac] + "/sms";
+        let url_cloud = MSERV_ADR[mac] + "/email";
         console.log(url_cloud)
         axios.get(url_cloud)
         .then((res) => {
             console.log(res.data);
         })
         .catch(function (error) {
-            // handle error
             console.log(error);
           })
     });
 } 
 
-async function getArpConnected() { 
+function getArpConnected() { 
+    let result;
+    let temp;
+    let command = `awk '$4~/[1-9a-f]+/&&$6~/^wl/{print "ip: "$1" mac: "$4}' /proc/net/arp`;
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`);
+          return;
+        }
+        if(stdout){
+            console.log(stdout)
+            temp = stdout.split('\n')[0].split(" ");
+            result = JSON.stringify({ mac : temp[3], ip : temp[1]});
+            return result;
+        }
+    });
+}
+
+async function getArpConnectedAsync() { 
     let result;
     let temp;
     let command = `awk '$4~/[1-9a-f]+/&&$6~/^wl/{print "ip: "$1" mac: "$4}' /proc/net/arp`;
@@ -180,8 +198,10 @@ function setStopListener() {
 app.get('/wifi', (req, res) => {
     if (fs.existsSync("/run/hostapd.pid"))
         res.send(JSON.stringify({"etat":"active"}))
-    else
-        res.send(JSON.stringify({"etat":"inactive"}))
+    else{
+        res.send(JSON.stringify({"etat":"inactive"}));
+}
+        
 });
 
 app.post('/wifi', (req, res) => {
@@ -190,18 +210,22 @@ app.post('/wifi', (req, res) => {
     console.log(req.query.command)
     if (req.query.command == "activate"){
         stopTable = false
-        state = {'etat':'active'}
+        state = {'etat':'active'};
+        // TODO Start Wifi 
+        // Commande GPIO arduino pour activer ble et communiquer avec ble camera
+        // checkConnection(true / false) mais sans requête sms
     }
-    else{
-        stopTable = true
+    else {
+        //stopTable = true
         state = {'etat':'inactive'}
+        setWifiOff()
     }
     console.log(state)
     res.send(JSON.stringify(state))
 });
 
 app.get('/leases', (req, res) => {
-    getArpConnected().then( r => {
+    getArpConnectedAsync().then( r => {
         res.send(r)} 
     );
 });
