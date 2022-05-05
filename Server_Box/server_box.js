@@ -5,8 +5,12 @@ const cors = require('cors');
 const exec = require('child_process').exec;
 const util = require("util");
 const { clear } = require('console');
-const Gpio = require('onoff').Gpio; 
+const Gpio = require('onoff').Gpio;
 
+//const web = new Gpio(26, 'out');
+
+const web_test = new Gpio(26, 'in', 'rising', {debounceTimeout: 20});
+const button = new Gpio(6, 'in', 'rising', {debounceTimeout: 20});
 
 const app = express()
 const execProm = util.promisify(exec);
@@ -23,23 +27,39 @@ let timer;
 
 app.use(cors());
 
+web_test.watch((err, value) => {
+    console.log('appui sur web BLE pour activer le wifi du rpibox')
+}); 
 
-const button = new Gpio(26, 'in', 'rising', {debounceTimeout: 20});
+process.on('SIGINT', _ => {
+    web_test.unexport();
+});
+
+
 button.watch((err, value) => {
     console.log('appui sur bouton BLE pour activer le wifi du rpibox')
-    setWifiOn() 
+    setWifiOn('button') ;
 }); 
 
 process.on('SIGINT', _ => {
     button.unexport();
 });
 
-async function setWifiOn(){
+async function setWifiOn(type_command){
     let command = `sudo service hostapd start`
     exec(command);
-    console.log("wifi on");
     notifyMyWifi();
-    arpInterval = setInterval(checkConnection, 250)
+    if (type_command == "button"){
+        console.log("wifi on by button");
+        //arpInterval = setInterval(checkConnection, 250);
+        arpInterval = setInterval( function() { checkConnection(true); }, 250 );    // true indique qu'il faut envoyé un email
+    }
+    if (type_command == "web"){
+        console.log("wifi on by web");
+        //arpInterval = setInterval(checkConnection, 250);
+        arpInterval = setInterval( function() { checkConnection(false); }, 250 );   // false indique qu'il ne faut pas envoyé d'emal
+    }
+    
 }
 
 async function setWifiOff(){
@@ -93,8 +113,8 @@ async function getMyMacAdress(){
     }
 } 
 
-function checkConnection(){     // 
-    console.log('check connection')
+function checkConnection(bool){     // 
+    console.log('check connection');
     let command = `awk '$4~/[1-9a-f]+/&&$6~/^wl/{print "ip: "$1" mac: "$4}' /proc/net/arp`;
     exec(command, (error, stdout, stderr) => {
         if (error) {
@@ -104,7 +124,7 @@ function checkConnection(){     //
         if(stdout){
             clearInterval(arpInterval);
             console.log(`Connexion établie`);
-            sendRequestForEmail()  
+            if(bool) sendRequestForEmail() ;
         }
     });
 }
@@ -209,11 +229,12 @@ app.post('/wifi', (req, res) => {
     serviceHostapd(req.query.command)
     console.log(req.query.command)
     if (req.query.command == "activate"){
+        const web_real = new Gpio(5, 'out');
         stopTable = false
         state = {'etat':'active'};
-        // TODO Start Wifi 
-        // Commande GPIO arduino pour activer ble et communiquer avec ble camera
-        // checkConnection(true / false) mais sans requête sms
+        setWifiOn('web');
+        web_real.writeSync(1);
+        setTimeout(_ => {web_real.unexport();}, 1000);
     }
     else {
         //stopTable = true
