@@ -5,11 +5,14 @@ service.py et server.js ont fusionné dans server_cloud.js
     - server.js
     - service.py (attendre de vérifier que l'ensemnble des fonctionnalités ont été intégré dans server_cloud.js)
 
-
+==> Always run server_cloud.js before server.box.js
 List of npm install
 - npm install nodemon
 - npm install express
 - npm install cors   
+- npm i chart.js
+- npm install socket.io
+- npm install axios
 
 To launch server_cloud
 
