@@ -125,14 +125,13 @@ function processWifiStatus(wifi_status){
         justclick = false;
         justButton = false;
         console.log("scanForConnected lancé ****************************************");
+        nbScan = 0;
         scanInterval = setInterval(scanForConnected, 5000);
     }
     else if (wifi_state === "inactive") {
         watt = 0;
         document.getElementById("LeaseInfo").style.visibility = "hidden";
         document.getElementById("LaunchViewing").style.visibility = "hidden";
- /*       if(pingInterval)
-            clearInterval(pingInterval);*/
     }
     console.log("Update status button to : " + wifi_state);
     document.getElementById('wifi_button').innerHTML = wifi_state
@@ -152,17 +151,8 @@ function processWifiLeases(leases){
         document.getElementById("LaunchViewing").innerText = "Click to launch Video"
         activateRoutes(ip_cam);
         nbScan = NB_SCAN_MAX;
-        /* 
-        nbScan = 0;
-        clearInterval(scanInterval);*/
-        //pingInterval = setInterval(sendPing, 1000);
     } 
 }
-/*
-function sendPing(){
-    let url = "http://" + ip_of_box + ":8008/ping"
-    allRequest(url, responsePing, "POST")
-}*/
 
 function activateRoutes(ip_cam){
     console.log("---> Send POST /lease&route to activate route for ip : " + ip_cam)
@@ -174,18 +164,13 @@ function responseActivate(res){
     //console.log(res)
 }
 
-function responsePing(res){
-    console.log(res)
-} 
 
 function scanForConnected(){
     nbScan += 1;
     console.log ("      Scan attempt to create route with camera : number " + nbScan + "/" + NB_SCAN_MAX);
     retrieveWifiLeases()
-    if (nbScan >= NB_SCAN_MAX) {
+    if (nbScan >= NB_SCAN_MAX)
         clearInterval(scanInterval);
-        nbScan = 0;
-    }
 }
 
 function allRequest(url, funct, cmd){
