@@ -21,7 +21,7 @@ let stopTable = false;
 app.use(cors());
 
 web_test.watch((err, value) => {
-    console.log('appui sur web BLE pour activer le wifi du rpibox')
+    console.log('appui sur web BLE pour activer le wifi du rpibox');
 }); 
 
 process.on('SIGINT', _ => {
@@ -30,7 +30,7 @@ process.on('SIGINT', _ => {
 
  
 button.watch((err, value) => {
-    console.log('appui sur bouton BLE pour activer le wifi du rpibox')
+    console.log('appui sur bouton BLE pour activer le wifi du rpibox');
     setWifiOn('button') ;
 }); 
 
@@ -129,6 +129,7 @@ function checkConnection(bool){     //
           return;
         }
         if(stdout){
+            console.log(stdout);
             clearInterval(arpIntervalConnect);
             console.log(`       Connexion between Box and Camera is on` + stdout);
             console.log(` `);
@@ -155,7 +156,7 @@ function checkDisconnection(){     //
 
 function sendRequestForEmail(){
     getMyMacAdress().then(mac => {
-        let url_cloud = MSERV_ADR[mac] + "/email";
+        let url_cloud = config.MSERV_ADR[mac] + "/email";
         console.log("---> Send GET /email to Cloud to send an email");
         axios.get(url_cloud)
         .then((res) => {
