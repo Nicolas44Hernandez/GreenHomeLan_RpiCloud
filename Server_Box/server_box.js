@@ -1,15 +1,10 @@
 const express = require('express')
 const axios = require('axios');
-const fs = require('fs');
 const cors = require('cors');
 const exec = require('child_process').exec;
 const util = require("util");
-const { clear } = require('console');
-const { init } = require('noble/lib/websocket/bindings');
 const Gpio = require('onoff').Gpio;
-
-
-//const web = new Gpio(26, 'out');
+const config = require('./config');
 
 const web_test = new Gpio(26, 'in', 'rising', {debounceTimeout: 20});
 const button = new Gpio(6, 'in', 'rising', {debounceTimeout: 20});
@@ -17,18 +12,11 @@ const wifi_pin = new Gpio(14, 'out');
 
 const app = express()
 const execProm = util.promisify(exec);
-const DELAY = 5000
-const port = 8008 
+
 let arpIntervalConnect;
 let arpIntervalDisconnect;
 let wifi_on = false;
-
-const MSERV_ADR   = {
-    "e4:5f:01:0e:34:3f" : "http://192.168.1.29:8000",
-    "e4:5f:01:0e:31:ed" : "http://172.16.57.127:8000"}
-
 let stopTable = false;
-let timer; 
 
 app.use(cors());
 
@@ -61,15 +49,12 @@ async function setWifiOn(type_command){
     console.log('       Check connection between camera and box');
     if (type_command == "button"){
         console.log("wifi on by button");
-        //arpInterval = setInterval(checkConnection, 250);
-        arpIntervalConnect = setInterval( function() { checkConnection(true); }, 250 );    // true indique qu'il faut envoyé un email
+        arpIntervalConnect = setInterval( function() { checkConnection(true); }, config.delay );    // true indique qu'il faut envoyé un email
     }
     if (type_command == "web"){
         console.log("       Setup Wi-FI at on by Web");
-        //arpInterval = setInterval(checkConnection, 250);
-        arpIntervalConnect = setInterval( function() { checkConnection(false); }, 250 );   // false indique qu'il ne faut pas envoyé d'emal
+        arpIntervalConnect = setInterval( function() { checkConnection(false); }, config.delay );   // false indique qu'il ne faut pas envoyé d'email
     }
-    
 }
 
 async function setWifiOff(){
@@ -81,21 +66,13 @@ async function setWifiOff(){
     wifi_pin.writeSync(0);
     console.log("       LED BOX is OFF");
     console.log('       Check disconnection between camera and box');
-    arpIntervalDisconnect = setInterval(checkDisconnection, 250);
+    arpIntervalDisconnect = setInterval(checkDisconnection, config.delay);
 }
  
-function initServer(){
-   /* let command = `sudo service hostapd stop`
-    exec(command);*/
-    console.log('-----------------------------------------> Init Server');
-    setWifiOff();
-}
-
-
 function postMyIp(){
     console.log('-----------------------------------------> Post My Ip box to Cloud')
     getMyMacAdress().then(mac => {
-        let url_cloud = MSERV_ADR[mac] + "/boxes_ip";
+        let url_cloud = config.MSERV_ADR[mac] + "/boxes_ip";
         getMyIp().then(my_ip => {
             console.log("---> Send POST /boxes_ip to cloud to inform the box information" + url_cloud);
             axios.post(url_cloud, {
@@ -113,7 +90,7 @@ function postMyIp(){
  
 function notifyMyWifi(){    // A vérifier si utile
     getMyMacAdress().then(mac => { 
-        let url_cloud = MSERV_ADR[mac] + "/notify_wifi";
+        let url_cloud = config.MSERV_ADR[mac] + "/notify_wifi";
         console.log("---> Send POST /notify_wifi to Cloud");
         axios.post(url_cloud, {
             status: wifi_on
@@ -137,7 +114,7 @@ async function getMyMacAdress(){
     let out = await execProm(command);
     let list_mac = out["stdout"].split('\n')
     for (let mac of list_mac){
-        if (MSERV_ADR[mac] !== undefined){
+        if (config.MSERV_ADR[mac] !== undefined){
             return  mac
         }
     }
@@ -153,7 +130,7 @@ function checkConnection(bool){     //
         }
         if(stdout){
             clearInterval(arpIntervalConnect);
-            console.log(`       Connexion between Box and Camera is on`);
+            console.log(`       Connexion between Box and Camera is on` + stdout);
             console.log(` `);
             if(bool) sendRequestForEmail() ;
         }
@@ -173,22 +150,6 @@ function checkDisconnection(){     //
             console.log(`       Connexion between Box and Camera is out`);
             console.log(` `);
         }
-    });
-}
-
-function checkConnectionAfterBoot(){     // 
-    console.log("       Check connection after boot of Box")
-    let command = `awk '$4~/[1-9a-f]+/&&$6~/^wl/{print "ip: "$1" mac: "$4}' /proc/net/arp`;
-    exec(command, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`exec error: ${error}`);
-          return;
-        }
-        if(stdout){
-            console.log(`       Connexion between Box and Camera is out`);
-            console.log(` `);
-            return true;
-        }else return false;
     });
 }
 
@@ -255,16 +216,6 @@ async function removeRules(){
     }
 }
 
-async function serviceHostapd(cmd){
-    let command 
-    if (cmd == "activate")
-        command = `sudo service hostapd start`;
-    else 
-        command = `sudo service hostapd stop`;
-    console.log(command)
-    await execProm(command);  
-} 
-
 function setStopListener() { 
     console.log('-----------------------------------------> Start StopListener for close Wifi');
     const stopListener = () => {
@@ -285,10 +236,7 @@ function setStopListener() {
     };
     stopListener();
 } 
-/*
-function getStatusWifi(){
-    return fs.existsSync("/run/hostapd.pid");
-}*/
+
 app.get('/wifi', (req, res) => {
     console.log("----> Receive GET /wifi from cloud to asked state Wi-Fi");
     if (wifi_on){
@@ -362,18 +310,11 @@ app.post('/leases', (req, res) => {
         console.log(`<---- Respoonse to POST /leases by removing route`);
     }
 });
-
-/*
-app.post('/ping', (req, res) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => stopTable = true, DELAY);
-    res.send('{"ping":"pong"}')
-}); */ 
   
-app.listen(port, () => { 
-    console.log(`-----------------------------------------> Server cloud listening on port ${port}`)
+app.listen(config.port, () => { 
+    console.log(`-----------------------------------------> Server cloud listening on port ${config.port}`)
 });     
    
+
 setStopListener();    
 postMyIp();          
-//initServer();  
