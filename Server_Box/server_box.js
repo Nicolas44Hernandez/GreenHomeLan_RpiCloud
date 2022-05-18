@@ -60,12 +60,12 @@ async function setWifiOn(type_command){
 
 async function setWifiOff(){
     let command = `sudo service hostapd stop`;
-    exec(command);
-    console.log("       Command to stop Wi-Fi");
     wifi_on = false;
+    console.log("       Command to stop Wi-Fi");
+    exec(command);
     notifyMyWifi();
     wifi_pin.writeSync(0);
-    console.log("       LED BOX is OFF");
+    console.log("       LED BOX Wi-Fi is OFF");
     console.log('       Check disconnection between camera and box');
     arpIntervalDisconnect = setInterval(checkDisconnection, config.delay);
 }
@@ -161,6 +161,7 @@ function checkDisconnection(){     //
             clearInterval(arpIntervalDisconnect);
             console.log(`       Connexion between Box and Camera is out`);
             console.log(` `);
+            info_lease = {};
         }
     });
 }
@@ -200,25 +201,26 @@ async function removeRules(){
     }
 }
 
-function setStopListener() { 
+function setStopListener() {  
     console.log('-----------------------------------------> Start StopListener for close Wifi');
     const stopListener = () => {
-        if (stopTable && !info_lease) {
-            stopTable = false;
-            removeRules();
-            console.log("---> Send GET /closewifi to camera to shutdown");
-            console.log(info_lease);
+        //console.log("info_lease :  " + Boolean(info_lease.ip) + " stopTable : " + stopTable + ' Res : ' + (stopTable && info_lease) );
+        if (stopTable && info_lease) {
             let url_cam = "http://"+ info_lease.ip + ":4000/closewifi"; 
+            stopTable = false;
+            console.log("---> Send Demand GET /closewifi to camera to shutdown Wi-Fi");
             axios.get(url_cam)
             .then((res) => {
-                console.log('ici : ' + res.data); 
+                console.log("<--- Receive Response GET /closewifi by camera where Wi-Fi is over");
+                console.log(res.data);
+                removeRules();
+                setWifiOff(); 
             })
             .catch(function (error) {
                 console.log(error);
             });
-            setWifiOff(); 
         }
-        return setTimeout(stopListener, 250);
+        return setTimeout(stopListener, config.delay);
     };
     stopListener();
 } 
@@ -236,7 +238,7 @@ app.get('/wifi', (req, res) => {
 });
 
 app.get('/disconnect', (req, res) => {
-    res.send('ok disconnect');
+    res.send('ok disconnect'); 
     stopTable = true;
 });
  
@@ -253,19 +255,8 @@ app.post('/wifi', (req, res) => {
         setTimeout(_ => {web_real.unexport();}, 1000);
     }      
     else { 
-        console.log("---> Receive POST /wifi from cloud to desactivate Wi-Fi box");
+        console.log("---> Receive POST /wifi from cloud to desactivate Wi-Fi");
         state = {'etat':'inactive'};
-        console.log("---> Send GET /closewifi to camera to shutdown");
-        console.log(info_lease);
-        let url_cam = "http://"+ info_lease.ip + ":4000/closewifi"; 
-        axios.get(url_cam)
-        .then((res) => {
-            console.log("---> Receive GET /closewifi where Wi-Fi Camera is shut down ; " + res.data);
-        })
-        .catch(function (error) {
-            console.log(error);
-        }); 
-        //setWifiOff();
         stopTable = true;
     }  
     console.log(state)
@@ -280,19 +271,12 @@ app.get('/leases', (req, res) => {
 app.post('/leases', (req, res) => {
     let lease_ip = req.query.ip;
     let command = req.query.command;   
-    
     if(command=='route'){
         console.log('---> Receive POST /leases to create route asked by Client Web');
         createNatPreroutingRules(lease_ip).then( () => {
             res.send( `{"status":"routed", "ip":"${lease_ip}"}`);
             console.log(`<---- Response to POST /leases by creating route to ${lease_ip}`);
         });
-    }else{
-        console.log('---> Receive POST /leases to remove route by Client Web')
-        removeRules(); 
-        stopTable = false; 
-        res.send('{"status":"unrouted"}');
-        console.log(`<---- Respoonse to POST /leases by removing route`);
     }
 });
   
