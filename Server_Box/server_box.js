@@ -15,6 +15,7 @@ const execProm = util.promisify(exec);
 
 let arpIntervalConnect;
 let arpIntervalDisconnect;
+let info_lease = {};
 let wifi_on = false;
 let stopTable = false;
 
@@ -118,7 +119,17 @@ async function getMyMacAdress(){
             return  mac
         }
     }
-} 
+}
+
+function extractInfoLease(stdout){
+    console.log(stdout);
+    myArray = stdout.slice(0, -1).split(" ");
+    info_lease = {
+        ip : myArray[1],
+        mac : myArray[3]
+    };
+    console.log(info_lease);
+}
 
 function checkConnection(bool){     // 
     console.log('       Check connection in progress .....');
@@ -129,7 +140,7 @@ function checkConnection(bool){     //
           return;
         }
         if(stdout){
-            console.log(stdout);
+            extractInfoLease(stdout);
             clearInterval(arpIntervalConnect);
             console.log(`       Connexion between Box and Camera is on` + stdout);
             console.log(` `);
@@ -168,34 +179,6 @@ function sendRequestForEmail(){
     });
 }   
  
-function getArpConnected() { 
-    let result;
-    let temp;
-    let command = `awk '$4~/[1-9a-f]+/&&$6~/^wl/{print "ip: "$1" mac: "$4}' /proc/net/arp`;
-    exec(command, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`exec error: ${error}`);
-          return;
-        }
-        if(stdout){
-            console.log(stdout)
-            temp = stdout.split('\n')[0].split(" ");
-            result = JSON.stringify({ mac : temp[3], ip : temp[1]});
-            return result;
-        }
-    });
-}
-
-async function getArpConnectedAsync() { 
-    let result;
-    let temp;
-    let command = `awk '$4~/[1-9a-f]+/&&$6~/^wl/{print "ip: "$1" mac: "$4}' /proc/net/arp`;
-    temp = await execProm(command);
-    temp = temp["stdout"].split('\n')[0].split(" ") 
-    result = JSON.stringify({ mac : temp[3], ip : temp[1]});
-    return result;
-}
-
 async function createNatPreroutingRules(targetIp){
     let command = `sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 4000 -m conntrack --ctstate NEW -j DNAT --to ${targetIp}:4000`
     await execProm(command);
@@ -220,11 +203,13 @@ async function removeRules(){
 function setStopListener() { 
     console.log('-----------------------------------------> Start StopListener for close Wifi');
     const stopListener = () => {
-        if (stopTable) {
+        if (stopTable && !info_lease) {
             stopTable = false;
             removeRules();
             console.log("---> Send GET /closewifi to camera to shutdown");
-            axios.get("http://192.168.4.18:4000/closewifi")      // ne pas mettre l'adresse en clair
+            console.log(info_lease);
+            let url_cam = "http://"+ info_lease.ip + ":4000/closewifi"; 
+            axios.get(url_cam)
             .then((res) => {
                 console.log('ici : ' + res.data); 
             })
@@ -266,12 +251,14 @@ app.post('/wifi', (req, res) => {
         web_real.writeSync(1);
         console.log("       LED BOX is ON");
         setTimeout(_ => {web_real.unexport();}, 1000);
-    }     
+    }      
     else { 
         console.log("---> Receive POST /wifi from cloud to desactivate Wi-Fi box");
         state = {'etat':'inactive'};
         console.log("---> Send GET /closewifi to camera to shutdown");
-        axios.get("http://192.168.4.18:4000/closewifi")      // ne pas mettre l'url en dur
+        console.log(info_lease);
+        let url_cam = "http://"+ info_lease.ip + ":4000/closewifi"; 
+        axios.get(url_cam)
         .then((res) => {
             console.log("---> Receive GET /closewifi where Wi-Fi Camera is shut down ; " + res.data);
         })
@@ -287,10 +274,7 @@ app.post('/wifi', (req, res) => {
 
 app.get('/leases', (req, res) => {
     console.log('---> Receive GET /leases from Web Client to know the information leases');
-    getArpConnectedAsync().then( r => { 
-        console.log('---> Response GET /leases to Web Client  : ' + r);
-        res.send(r)} 
-    );
+    res.send(JSON.stringify(info_lease));
 });  
 
 app.post('/leases', (req, res) => {
