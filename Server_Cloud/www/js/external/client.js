@@ -91,12 +91,8 @@ socket.on("buttonBle", (arg) => {
     }*/
 }); 
 
-socket.on("test ", (arg) => { 
-    console.log('********************  test : '+arg);
-});
- 
 function retrieveBoxIp() {
-    let url = "http://192.168.1.29:8000/boxes_ip/" + box_name;
+    let url = document.URL+ "boxes_ip/" + box_name;
     console.log("---> Send GET to " + url+ " to cloud to know the ip adress Box: ");
     allRequest(url, processBoxIp, 'GET')
 }
