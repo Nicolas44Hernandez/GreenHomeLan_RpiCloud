@@ -12,6 +12,7 @@ const port = 4000;
 const button = new Gpio(6, 'in', 'rising', {debounceTimeout: 20});
 const web = new Gpio(26, 'in', 'rising', {debounceTimeout: 20});
 const wifi_pin = new Gpio(14, 'out');
+let last_frame;
 
 httpServer.listen(port);
 
@@ -54,7 +55,6 @@ async function setWifiOn(type_command){
     if (type_command == "web"){
         console.log("wifi on by web");
     }
-    
 }
 
 async function setWifiOff(){
@@ -66,34 +66,25 @@ async function setWifiOff(){
     console.log("       Wi-FI is off");
 }
 
-class ServerData {
-    constructor() {
-        this.last_frame = undefined;
-    }
-   
-    frame_data(req, res) {
-        this.last_frame = req.body.data;
-        //console.log("Got frame data 1: " + this.last_frame + " bytes");
-        res.end()
-    }
-
-    get_frame(req, res) {
-        if (this.last_frame != undefined) {
-            res.end(this.last_frame);
-            this.last_frame = undefined;
-        }
+function getFrame(res) {
+    if (last_frame != undefined) {
+        res.end(last_frame);
+        last_frame = undefined;
     }
 }
 
-const server = new ServerData();
+function frameData(req, res) {
+    last_frame = req.body.data;
+    res.end();
+}
 
-app.post("/frame_data", function(req, res) {
-    
-    server.frame_data(req, res);
+app.post("/frame_data", (req, res) => {
+    frameData(req, res);
 });
 
 app.get("/get_frame", (req, res) => {
-    server.get_frame(req, res);
+    console.log("get_frame");
+    getFrame(res);
 });
 
 app.get("/closewifi", (req, res) => {
