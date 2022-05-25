@@ -1,20 +1,18 @@
 const bodyParser = require('body-parser');
 const express = require('express');
-const {createServer} = require("http");
-const {Server} = require("socket.io");
 const exec = require('child_process').exec;
 const Gpio = require('onoff').Gpio;
 
 const app = express();
-const httpServer = createServer(app);
-const io = new Server(httpServer);
 const port = 4000;
 const button = new Gpio(6, 'in', 'rising', {debounceTimeout: 20});
 const web = new Gpio(26, 'in', 'rising', {debounceTimeout: 20});
 const wifi_pin = new Gpio(14, 'out');
 let last_frame;
 
-httpServer.listen(port);
+app.listen(port, () => { 
+    console.log(`-----------------------------------------> Server Camera listening on port ${port}`)
+}); 
 
 app.use(express.static(__dirname + '/www'));
 app.use(bodyParser.urlencoded({
