@@ -10,50 +10,76 @@ let watt = 0;
 let justclick = false;
 let justButton = false;
 let activate_lease = true;
-let new_data = [0, 0 ,0 , 0, 0, 0, 0, 0, 0,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,];
+const NB_VALUE = 500;
+const new_data = new Array(NB_VALUE).fill(0);
+const labels =  Array.from(Array(NB_VALUE).keys()).map(String);
 const NEW_VERSION = true;
 const ctx  = document.getElementById('myChart').getContext("2d");
-const labels = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-    '11',
-    '12',
-    '13',
-    '14',
-    '15',
-    '16',
-    '17',
-    '18',
-    '19',
-    '20',
-    '21',
-    '22',
-    '23',
-    '24',
-];
 const data = {
     labels: labels,
     datasets: [{
-        label: 'Evolution de la consommation dans le HomeLan',
+        label: 'Puissance en Watt',
         backgroundColor: 'rgb(0, 99, 132)',
         borderColor: 'rgb(0, 99, 132)',
+        fill: true,
         data: new_data,
     }]
 }; 
 const config = {
     type: 'line',
     data: data,
-    options: {}
+    options: {
+        animation:false,
+        elements: {
+            point: {
+                pointStyle:'line'
+            }
+        },
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            },
+            title: {
+                display: true,
+                text: 'Evolution de la consommation dans le HomeLan',
+                padding: {
+                    top: 30,
+                    bottom: 20
+                }
+            }
+          },
+        scales: {
+            y: {
+                min: 0,
+                max: 4,
+                title: {
+                    display: true,
+                    text: 'Puissance du Wi-Fi (Watt)'
+                }
+            } ,
+            x:{
+                title: {
+                    display: true,
+                    text: 'Time'
+                },
+                ticks: {
+                    display:false
+                },
+                grid: {
+                    display:false
+                }
+            }
+          }
+    }
 };
 const myChart = new Chart(ctx ,config);
+
+function updateChart(){
+    myChart.data.datasets[0].data.shift();
+    myChart.data.datasets[0].data.push(watt);
+    myChart.update();
+};
 
 socket.on("connect", () => { 
     console.log('Connected to Server_cloud with id : ' + socket.id); 
@@ -196,17 +222,15 @@ function openInNewTab(url) {
     window.open(url, '_blank').focus();
 }
 
-function updateChart(){
-    myChart.data.datasets[0].data.shift();
-    myChart.data.datasets[0].data.push(watt);
-    myChart.update();
-};
+
+
 
 document.getElementById("LaunchViewing").addEventListener('click', function() {
     let url = "http://" + ip_of_box + ":4000";
     document.getElementById("test").src = url; 
     document.getElementById("test").style.visibility = "visible";
-    watt = 3;
+    watt = 3;                                          
+
     //document.getElementById("preview_cam").src = url; 
     //openInNewTab(url);
 });
@@ -226,7 +250,7 @@ document.getElementById('wifi_button').addEventListener('click', function() {
         url = url + "?command=activate";
     }
         
-    allRequest(url, processWifiStatus, 'POST');
+    allRequest(url, processWifiStatus, 'POST');  
 });
 
 retrieveBoxIp();

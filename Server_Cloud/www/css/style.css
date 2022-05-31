@@ -22,3 +22,7 @@ body{
 .div{
     margin:50px;
 }
+
+.chart-container {
+    margin: auto;
+}

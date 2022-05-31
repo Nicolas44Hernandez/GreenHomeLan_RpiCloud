@@ -25,7 +25,7 @@ let transporter = nodemailer.createTransport({
       user: 'ghomelan@gmail.com',
       pass: 'greenhomelanorange'
     }
-  });
+  }); 
   
 let mailOptions = {
     from: 'ghomelan@gmail.com',
@@ -95,9 +95,9 @@ io.on("connection", (socket) => {
   socket.emit('test', 'test' + socket.id);
   socket.on("disconnect", (reason) => { 
     console.log('Disconnection socket on client web with id : ' + socket.id); 
-    let boxesip = fs.readFileSync('boxesip.json');
+    /*let boxesip = fs.readFileSync('boxesip.json');
     let jsonip = JSON.parse(boxesip); 
-    let ip_box = jsonip["rpi_box"];
+    let ip_box = jsonip["rpi_box"];*/
     let url = 'http://' + ip_box + ":8008/disconnect";
     console.log("---> Send GET /disconnect to shut down homelan wifi");
     axios.get(url)  
