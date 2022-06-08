@@ -1,28 +1,69 @@
-## changement depuis la dernière version
-L'objectif est de simplifier la mise en route du server et de diminuer le nombre de fichier
-service.py et server.js ont fusionné dans server_cloud.js
-- on peut donc supprimer les fichiers suivants : 
-    - server.js
-    - service.py (attendre de vérifier que l'ensemnble des fonctionnalités ont été intégré dans server_cloud.js)
+# **Partie Cloud : Procédure d'installation et de configuration**
 
-==> Always run server_cloud.js before server.box.js
-List of npm install
-- npm install nodemon
-- npm install express
-- npm install cors   
-- npm i chart.js
-- npm install socket.io
-- npm install axios
+## **Installation de l'OS Raspbian sur rapsberry**
+Nous allons installer un OS au raspebrry pi simulant le cloud. Dans toute la procédure, ce raspberry pi sera nommé rpi_cloud.
+Afin de faciliter l'accès au dépôt et de bénéficier des derniers correctifs de l'OS raspbian, il est judicieux de prendre la dernière version Bullseye. 
+- [raspios_lite_Bullseye](https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2022-04-07/)
 
-To launch server_cloud
 
-`nodemon server_cloud.js`
-## Site Web
-sur un navigateur accéder au service wifi et video via l'adress du cloud par : 
-http://172.16.57.126:8000/ (pour JB)
-ou
-http://192.168.1.29:8000/  (pour David)
-Attention le numéro de port à changer
-## remarques générales
-- npm install --save cors pour server_cloud.js
-- Modify line10 of client.js by indicating ip local adress
+Flasher l'image raspios_lite sur la cartes sd du raspberry via l'outil Etcher : https://www.balena.io/etcher/
+
+## **Configuration de l'OS Raspbian**
+
+Connectez le rpi_cloud par par Ethernet et branchez y un clavier, et un écran via le port HDMI.
+Pour accéder aux commandes du raspberrypi, nous avons laissé par défaut (dentifiant : pi et mot de passe : raspberry)
+
+
+Il est possible de changer le mot de passe (non expliqué dans ce document). Déterminez l'adresse IP du rpi_box par la commande
+
+`ifconfig`
+
+Notez le. Ensuite, il est important d'activer l'option ssh (désactivé par défaut). Pour cela:
+
+`sudo raspi-config`
+
+Puis activer l'option ssh et  redémarrer par 
+
+` sudo reboot`
+
+Par la suite, l'écran et le clavier ne sont plus utiles. On peut se connecter par SSH via l'outil Putty en indiquant l'adresse ip préalabelement récupérée.
+
+Une fois connecté en  SSH, il est utile si cela est nécessaire, de changer le clavier en mode azerty, on peut le configurer de la manière suivante :
+
+`sudo nano /etc/default/keyboard`			
+
+puis modifier la ligne XKBLAYOUT="gb" par XKBLAYOUT="fr"
+
+## **Installation du serveur Nodejs**
+
+Dans un premier temps, il faut récupérer le répertoire sur GitHub:
+
+`git clone git@github.com:clemanthkar/GreenHomeLan_Camera.git`
+
+Aller dans le répertoire GreenHomeLan/Server_Cloud qui correspond à notre environnement de travail pour le rpi_cloud. Installer les dépendances suivantes:
+
+`npm init` (valider chaque lignes)
+
+ Puis installation des toutes les dépendances : 
+
+`npm i express`
+
+`npm i axios`
+
+`npm i cors`
+
+`npm i nodemailer`
+
+`npm i socket.io`
+
+Pour lancer le serveur cloud : 
+
+`node server_cloud.js`
+
+Au préalable pour faciliter la découverte entre le rpi-cloud et rpi-box, il est utile d'effectuer un ping sur l'adresse du rpi-box
+## Accès au Site Web
+
+Une application web est gérer par le server_cloud.js que l'on peut accéder sur un navigateur web par l'adresse suivante : 
+```
+http://<ip_rpi-cloud>:8000/
+```
