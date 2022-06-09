@@ -1,6 +1,6 @@
 # **Partie Cloud : Procédure d'installation et de configuration**
 
-## **Installation de l'OS Raspbian sur rapsberry**
+## **1. Installation de l'OS Raspbian sur rapsberry**
 Nous allons installer un OS au raspebrry pi simulant le cloud. Dans toute la procédure, ce raspberry pi sera nommé rpi_cloud.
 Afin de faciliter l'accès au dépôt et de bénéficier des derniers correctifs de l'OS raspbian, il est judicieux de prendre la dernière version Bullseye. 
 - [raspios_lite_Bullseye](https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2022-04-07/)
@@ -8,7 +8,7 @@ Afin de faciliter l'accès au dépôt et de bénéficier des derniers correctifs
 
 Flasher l'image raspios_lite sur la cartes sd du raspberry via l'outil Etcher : https://www.balena.io/etcher/
 
-## **Configuration de l'OS Raspbian**
+## **2. Configuration de l'OS Raspbian**
 
 Connectez le rpi_cloud par par Ethernet et branchez y un clavier, et un écran via le port HDMI.
 Pour accéder aux commandes du raspberrypi, nous avons laissé par défaut (dentifiant : pi et mot de passe : raspberry)
@@ -34,7 +34,7 @@ Une fois connecté en  SSH, il est utile si cela est nécessaire, de changer le 
 
 puis modifier la ligne XKBLAYOUT="gb" par XKBLAYOUT="fr"
 
-## **Installation du serveur Nodejs**
+## **3. Installation du serveur Nodejs**
 
 Dans un premier temps, il faut récupérer le répertoire sur GitHub:
 
@@ -61,7 +61,7 @@ Pour lancer le serveur cloud :
 `node server_cloud.js`
 
 Au préalable pour faciliter la découverte entre le rpi-cloud et rpi-box, il est utile d'effectuer un ping sur l'adresse du rpi-box
-## Accès au Site Web
+## **4. Accès au Site Web**
 
 Une application web est gérer par le server_cloud.js que l'on peut accéder sur un navigateur web par l'adresse suivante : 
 ```
