@@ -1,4 +1,4 @@
-# GreenHoeLan
+# GreenHomeLan
 
 ## 1. **Descriptif de la maquette GreenHomeLan**
 
