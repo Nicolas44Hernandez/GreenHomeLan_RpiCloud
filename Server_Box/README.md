@@ -1,6 +1,6 @@
 # **Partie Box : Procédure d'installation et de configuration**
 
-## **Installation de l'OS Raspbian sur rapsberry**
+## **1. Installation de l'OS Raspbian sur rapsberry**
 Nous allons installer un OS au raspebrry pi simulant la box. Dans toute la procédure, ce raspberry pi sera nommé rpi_box.
 Afin de faciliter l'accès au dépôt et de bénéficier des derniers correctifs de l'OS raspbian, il est judicieux de prendre la dernière version Bullseye. 
 - [raspios_lite_Bullseye](https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2022-04-07/)
@@ -8,7 +8,7 @@ Afin de faciliter l'accès au dépôt et de bénéficier des derniers correctifs
 
 Flasher l'image raspios_lite sur la cartes sd du raspberry via l'outil Etcher : https://www.balena.io/etcher/
 
-## **Configuration de l'OS Raspbian**
+## **2. Configuration de l'OS Raspbian**
 
 Connectez le rpi_box par par Ethernet et branchez y un clavier, et un écran via le port HDMI.
 Pour accéder aux commandes du raspberrypi, nous avons laissé par défaut (dentifiant : pi et mot de passe : raspberry)
@@ -35,7 +35,7 @@ Une fois connecté en  SSH, il est utile si cela est nécessaire, de changer le 
 puis modifier la ligne XKBLAYOUT="gb" par XKBLAYOUT="fr"						
 
 
-## **Installation des packages**
+## **3. Installation des packages**
 
 Nous allons ici installer les paquets issues de dépot linux :
 
@@ -51,7 +51,7 @@ Nous allons ici installer les paquets issues de dépot linux :
 
 
 
-## **Configuration du rpi_box en tant que point d'accès Wi-Fi**
+## **4. Configuration du rpi_box en tant que point d'accès Wi-Fi**
 
 le rpi_box doit être configuré comme point d'accès Wi-Fi. Les commandes pour la configuration sont les suivantes :
 
@@ -160,7 +160,7 @@ On valide le tout par le redémarrage du rpi-box
 Le point d'accès de la rpi_box sera maintenant visible par `rpibox` avec comme mot de passe `greenhomelan` 
 (un autre mot de passe est possible du moment qu'il est renseigné dans le fichier hostapd.conf)
 
-## **Installation du serveur Nodejs**
+## **5. Installation du serveur Nodejs**
 
 Dans un premier temps, il faut récupérer le répertoire sur GitHub:
 

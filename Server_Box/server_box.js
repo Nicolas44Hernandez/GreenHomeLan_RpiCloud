@@ -18,6 +18,7 @@ let arpIntervalDisconnect;
 let info_lease = {};
 let wifi_on = false;
 let stopTable = false;
+let url_cloud;
 
 app.use(cors());
 
@@ -26,7 +27,7 @@ web_test.watch((err, value) => {
 }); 
 
 process.on('SIGINT', _ => {
-    web_test.unexport();
+    web_test.unexport(); 
 });
 
  
@@ -73,10 +74,11 @@ async function setWifiOff(){
 function postMyIp(){
     console.log('-----------------------------------------> Post My Ip box to Cloud')
     getMyMacAdress().then(mac => {
-        let url_cloud = config.MSERV_ADR[mac] + "/boxes_ip";
+        url_cloud = config.MSERV_ADR[mac];
+        let url = url_cloud + "/boxes_ip";
         getMyIp().then(my_ip => {
             console.log("---> Send POST /boxes_ip to cloud to inform the box information" + url_cloud);
-            axios.post(url_cloud, {
+            axios.post(url, {
                 ip: my_ip,
                 name:"rpi_box"
               }).then((res) => {
@@ -89,7 +91,18 @@ function postMyIp(){
     });           
 }
  
-function notifyMyWifi(){    // A vérifier si utile
+function notifyMyWifi(){ 
+    let url = url_cloud + "/notify_wifi";
+    console.log("---> Send POST /notify_wifi to Cloud");
+        axios.post(url, {
+            status: wifi_on
+            }).then((res) => {
+            console.log('<--- Response to POST /notify_wifi by cloud where wifi is : ' + wifi_on);
+        }) 
+        .catch(function (error) { 
+            console.log(error);
+    });
+    /*
     getMyMacAdress().then(mac => { 
         let url_cloud = config.MSERV_ADR[mac] + "/notify_wifi";
         console.log("---> Send POST /notify_wifi to Cloud");
@@ -101,7 +114,8 @@ function notifyMyWifi(){    // A vérifier si utile
         .catch(function (error) { 
             console.log(error);
         });
-    });          
+    });  
+    */        
 }
        
 async function getMyIp(){
@@ -167,6 +181,15 @@ function checkDisconnection(){     //
 }
 
 function sendRequestForEmail(){
+    console.log("---> Send GET /email to Cloud to send an email");
+    axios.get(url_cloud)
+    .then((res) => {
+        console.log("<--- Response to GET /email by CLoud  : " + res.data);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+    /*
     getMyMacAdress().then(mac => {
         let url_cloud = config.MSERV_ADR[mac] + "/email";
         console.log("---> Send GET /email to Cloud to send an email");
@@ -177,7 +200,7 @@ function sendRequestForEmail(){
         .catch(function (error) {
             console.log(error);
         });
-    });
+    });*/
 }   
  
 async function createNatPreroutingRules(targetIp){
@@ -201,10 +224,9 @@ async function removeRules(){
     }
 }
 
-function setStopListener() {  
+function setStopListener() {   
     console.log('-----------------------------------------> Start StopListener for close Wifi');
     const stopListener = () => {
-        //console.log("info_lease :  " + Boolean(info_lease.ip) + " stopTable : " + stopTable + ' Res : ' + (stopTable && info_lease) );
         if (stopTable && info_lease) {
             let url_cam = "http://"+ info_lease.ip + ":4000/closewifi"; 
             stopTable = false;
@@ -220,10 +242,10 @@ function setStopListener() {
                 console.log(error);
             });
         }
-        return setTimeout(stopListener, config.delay);
+        return setTimeout(stopListener, config.delay); 
     };
     stopListener();
-} 
+}   
 
 app.get('/wifi', (req, res) => {
     console.log("----> Receive GET /wifi from cloud to asked state Wi-Fi");
@@ -284,6 +306,6 @@ app.listen(config.port, () => {
     console.log(`-----------------------------------------> Server cloud listening on port ${config.port}`)
 });     
    
-
+ 
 setStopListener();    
 postMyIp();          
