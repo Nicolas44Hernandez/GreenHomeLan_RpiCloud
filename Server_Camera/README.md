@@ -1,6 +1,6 @@
 # **Partie Camera : Procédure d'installation et de configuration**
 
-## **Installation de l'OS Raspbian sur rapsberry**
+## **1. Installation de l'OS Raspbian sur rapsberry**
 Nous allons installer un OS au raspebrry pi simulant la box. Dans toute la procédure, ce raspberry pi sera nommé rpi_camera.
 Afin de faciliter l'accès au dépôt et de bénéficier des derniers correctifs de l'OS raspbian, il est judicieux de prendre la dernière version Bullseye. 
 - [raspios_lite_Bullseye](https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2022-04-07/)
@@ -11,7 +11,7 @@ Afin de faciliter l'accès au dépôt et de bénéficier des derniers correctifs
 
 Flasher l'image raspios_lite sur la cartes sd du raspberry via l'outil Etcher : https://www.balena.io/etcher/
 
-## **Configuration de l'OS Raspbian**
+## **2. Configuration de l'OS Raspbian**
 
 Connectez le rpi_camera par par Ethernet et branchez y un clavier, et un écran via le port HDMI.
 Pour accéder aux commandes du raspberrypi, nous avons laissé par défaut (dentifiant : pi et mot de passe : raspberry)
@@ -36,7 +36,7 @@ Une fois connecté en  SSH, il est utile si cela est nécessaire, de changer le 
 
 puis modifier la ligne XKBLAYOUT="gb" par XKBLAYOUT="fr"	
 
-## **Installation des packages**
+## **3. Installation des packages**
 
 Nous allons ici installer les paquets issues de dépot linux utiles et communs au 3 raspberrypi
 
@@ -46,7 +46,7 @@ Nous allons ici installer les paquets issues de dépot linux utiles et communs a
     sudo apt install dnsmasq
     sudo apt install iptables
 
-## **Installation de la bibliothèque cv2**
+## **4. Installation de la bibliothèque cv2**
 
 La bibliothèque cv2 de python est indispensable pour la transmission de la vidéo au raspberrypi voisin. L'installation de cette bibliothèque est assez complexe 
 et il est utile d'en décrire les différentes étapes : 
@@ -69,7 +69,7 @@ Afin de tester la bonne installation de cv2, testons son import :
 
 Si aucune message d'erreur est visible, la procédure s'est alors bien passée.
 
-### **Configuration de la connexion Wifi pour le rpi_camera**
+### **5. Configuration de la connexion Wifi pour le rpi_camera**
 
 Cette partie vise à configurer la connexion Wifi du rpi_camera, afin qu'elle ne puisse se connecter automatiquement et seulement au rpi_box, créant ainsi le réseau wan
 du domicile. Si le rpi_camera est branché sur ethernet, pour que la liaison Wi-FI soit effective, il faudra se déconnecter. Dans le cas où seul la liaison Wi-Fi est effective, le ssh est impossible sauf si le pc se connecte en Wi-FI sur le point d'accès rpi_box. 
@@ -106,7 +106,7 @@ auth_alg=OPEN
 ```
 Après un reboot du rpi_camera, ce raspberrypi se connectera automatiquement en wifi sur le rpi_box
 
-## **Installation et lancement du serveur Nodejs**
+## **6. Installation et lancement du serveur Nodejs**
 
 Dans un premier temps, il faut récupérer le répertoire sur GitHub:
 
@@ -126,7 +126,7 @@ Pour lancer le serveur camera :
 
 `node server_camera.js`
 
-## **Installation et lancement du programme captureVideo.py**
+## **7. Installation et lancement du programme captureVideo.py**
 
 Ce programme python premet de récupérer les images issue de la camera et des les envoyer sur un serveur. Pour cela, il faut installer les bibliothèques suivantes : 
 
