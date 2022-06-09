@@ -185,8 +185,7 @@ ButtonBLE -> bleCamera : Command BLE Synchrone
 bleCamera -> bleCamera : Start Wifi
 boxsserver --> boxsserver : getArpConnected() ? (detection liaison wifi)
 boxsserver --> cloudserver : POST Contact SMS User (tel)
-cloudserver --> User : Send SMS
+cloudserver --> User : Send Notifications on phone
 cloudserver --> boxsserver : Send "Envoie de sms confirmée)
 @enduml
 ```
-

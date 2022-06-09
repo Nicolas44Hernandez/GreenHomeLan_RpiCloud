@@ -1,7 +1,4 @@
-# Camera
-
-# Cas d'usage : Camera
-
+# GreenHoeLan
 
 ## 1. **Descriptif du cas d'usage**
 
@@ -55,7 +52,7 @@ Réaliser un réseau BLE constitué de 3 composants. Chaque composant nécessite
 - Installation du [logiciel arduino](https://www.arduino.cc/en/software) 
 - **Installation de la carte** : outils > Type de carte > Gestionnaire de cartes > Arduino SAMD Boards à installer
 - **Choix de la carte** : outils > Type de carte > Arduino SAMD Boards > Arduino MKR Wifi 1010
-- Branchement des 3 montages sur le PC
+- Branchement des 3 montages sur le PC via les câbles USB
 - Déterminer le port COM correspondant à la connection du montage sur PC. 
 - Téléverser le programme appropié pour chaque montage
     - Central_Ghl dans à montage relié au rpi_camera
