@@ -3,13 +3,12 @@ import cv2
 import random
 import time
 import base64
-import local 
 
 # Globals
 TMP_PATH = "tmp.jpg"
 FPS = 10
 PICTURE_RATIO = 0.5
-MAIN_URL = "http://"+local.adr_cam+":5000"
+MAIN_URL = "http://127.0.0.1:4000"
 
 # Unique camera id
 def get_id():
@@ -27,7 +26,7 @@ def send_frame(cam_id, frame):
     frame_data = {"data":get_base_64(frame)}
     headers = {"cam_id":cam_id}
     try:
-        print ("posting frame")
+        print ("posting frame : "+ MAIN_URL)
         r = requests.post(MAIN_URL + "/frame_data", data=frame_data, headers=headers)
     except:
         print ("error posting")
