@@ -29,7 +29,7 @@ class ServerData {
         res.end()
     }
 }
-
+ 
 // Instanciate Server
 const server = new ServerData();
 
