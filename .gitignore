@@ -12,3 +12,4 @@ Server_Box/package.json
 Server_Box/node_modules
 Server_Box/.vscode
 Server_Camera/package.json
+Server_Cloud/boxesip.json
