@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="index.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Welcome to Green Home Lan Demostration</h1>
+    <audio id="doorbell_audio" src="sounds/ding-dong.mp3" preload="auto"></audio>
+    <div class="row">
+        <div class="column">
+            <p id="wifi_status" >Wifi status:   </p>
+        </div>
+        <div class="column">
+            <div id="wifi_status_on">
+                <p class="dot-green"></p>
+            </div>   
+            <div id="wifi_status_off">
+                <p class="dot-red"></p>
+            </div>          
+        </div>
+    </div>  
+    <div>
+        <iframe id="frame" scrolling="no"></iframe>
+    </div>    
+    <h2>Use situations</h2>
+    <div class="row">
+        <div class="column">
+            <select class= "select-down" id = "myList">
+                <option> ---Choose use situation--- </option>
+                <option> PRESENCE_HOME_OFFICE </option>
+                <option> PRESENCE_DAY_HIGH_CONSUMPTION </option>
+                <option> PRESENCE_DAY_LOW_CONSUMPTION </option>
+                <option> PRESENCE_NIGHT_HIGH_CONSUMPTION </option>
+                <option> PRESENCE_NIGHT_LOW_CONSUMPTION </option>
+                <option> ABSENCE_HIGH_CONSUMPTION </option>
+                <option> ABSENCE_LOW_CONSUMPTION </option>
+                <option> ABSENCE_HIGH_CONSUMPTION_REMOTE_ACCESS </option>        
+            </select>
+        </div>
+        <div class="column">
+            <div id="use_situations_button" class="button my-button">Select</div>            
+        </div>
+    </div>      
+</body>
+</html>
