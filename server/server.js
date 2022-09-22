@@ -17,16 +17,20 @@ app.use(bodyParser.urlencoded({
 app.use(express.static(__dirname + '/www'));
 
 app.post('/wifi_status', function(request, response){
-  console.log("Wifi status received:")
-  console.log(request.body.status); 
+  console.log("Received - Wifi status: " + request.body.status)
   io.sockets.emit("wifi_status", request.body.status);
   response.send(request.body);    // echo the result back
 });
 
+app.post('/use_situation', function(request, response){
+  console.log("Received - Current use situation: " + request.body.use_situation)
+  io.sockets.emit("use_situation", request.body.use_situation);
+  response.send(request.body);    // echo the result back
+});
+
 app.post('/doorbell', function(request, response){
-  console.log("Doorbell: video stream notification received:")
-  console.log(request.body.status); 
-  io.sockets.emit("video_stream", request.body.status);
+  console.log("Received- Doorbell video stream notification received: " + request.body.status)
+  io.sockets.emit("video_stream", request.body.status, "doorbell");
   response.send(request.body);    // echo the result back
 });
 

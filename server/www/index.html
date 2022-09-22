@@ -6,46 +6,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/all.css">
     <script defer src="index.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-    <h1>Welcome to Green Home Lan Demostration</h1>
-    <audio id="doorbell_audio" src="sounds/ding-dong.mp3" preload="auto"></audio>
-    <div class="row">
-        <div class="column">
-            <p id="wifi_status" >Wifi status:   </p>
+    <script src="js/all.js"></script>
+    <div id="cotainer">
+        <div id="column-left" class="column left">
+            <audio id="doorbell_audio" src="sounds/ding-dong.mp3" preload="auto"></audio>
+            <div class="row">
+                <div class="column">
+                    <div id="get_live_stream_button" class="button my-button-stream ">LIVE</div> 
+                </div>
+                <div class="column">
+                    <div class="column column-icon column-icon-alert">
+                        <span id="icon-door">
+                            <i class="fa-solid fa-bell"></i>
+                        </span> 
+                    </div>  
+                    <div class="column column-icon column-icon-alert">
+                        <span id="icon-presence">
+                            <i class="fa-solid fa-person-circle-exclamation"></i>                            
+                        </span>                 
+                    </div>   
+                    <div class="column column-icon column-icon-video">
+                        <span id="icon-video-on">
+                            <i class="fa-solid fa-video"></i>
+                        </span>                
+                    </div>      
+                    <div class="column column-icon column-icon-video">
+                        <span id="icon-video-off">
+                            <i class="fa-solid fa-video-slash"></i>
+                        </span>
+                    </div>   
+                    <div class="column column-icon">
+                        <span id="icon-wifi">
+                            <i class="fa-solid fa-wifi-strong"></i>
+                        </span>
+                    </div>
+                </div>
+                     
+            </div>            
+            <div class="row">
+                <iframe id="frame" scrolling="no"></iframe>
+            </div> 
         </div>
-        <div class="column">
-            <div id="wifi_status_on">
-                <p class="dot-green"></p>
-            </div>   
-            <div id="wifi_status_off">
-                <p class="dot-red"></p>
-            </div>          
+        <div class="column center">
+            <h2>Use situations</h2>
+            <div class="row">
+                <div id="us-button-presence-day" class="button my-button-use-situation">
+                    <span id="icon-presence-day" class="my-icon-use-situation">
+                        <i class="fa-solid fa-house-user"></i>
+                    </span>
+                </div>            
+            </div> 
+            <div class="row">
+                <div id="us-button-presence-home-office" class="button my-button-use-situation">
+                    <span id="icon-presence-homeoffice" class="my-icon-use-situation">
+                        <i class="fa-solid fa-laptop-house"></i>
+                    </span>
+                </div>            
+            </div>              
+            <div class="row">
+                <div id="us-button-presence-night" class="button my-button-use-situation">
+                    <span id="icon-presence-night" class="my-icon-use-situation" style="padding-left: 20px;">
+                        <i class="fa-solid fa-moon"></i>
+                    </span>
+                </div>            
+            </div> 
+            <div class="row">
+                <div id="us-button-absence" class="button my-button-use-situation">
+                    <span id="icon-absence" class="my-icon-use-situation">
+                        <i class="fa-solid fa-person-walking-dashed-line-arrow-right"></i>
+                    </span>
+                </div>            
+            </div>
         </div>
-    </div>  
-    <div>
-        <iframe id="frame" scrolling="no"></iframe>
-    </div>    
-    <h2>Use situations</h2>
-    <div class="row">
-        <div class="column">
-            <select class= "select-down" id = "myList">
-                <option> ---Choose use situation--- </option>
-                <option> PRESENCE_HOME_OFFICE </option>
-                <option> PRESENCE_DAY_HIGH_CONSUMPTION </option>
-                <option> PRESENCE_DAY_LOW_CONSUMPTION </option>
-                <option> PRESENCE_NIGHT_HIGH_CONSUMPTION </option>
-                <option> PRESENCE_NIGHT_LOW_CONSUMPTION </option>
-                <option> ABSENCE_HIGH_CONSUMPTION </option>
-                <option> ABSENCE_LOW_CONSUMPTION </option>
-                <option> ABSENCE_HIGH_CONSUMPTION_REMOTE_ACCESS </option>        
-            </select>
-        </div>
-        <div class="column">
-            <div id="use_situations_button" class="button my-button">Select</div>            
-        </div>
-    </div>      
+    </div>   
 </body>
 </html>
