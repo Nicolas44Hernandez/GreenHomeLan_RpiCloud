@@ -205,14 +205,14 @@ socket.on("use_situation", (use_situation) => {
     }    
 });
 
-socket.on("video_stream", (video_stream_status, trigger) => {     
+socket.on("alarm_event", (video_stream_status, trigger) => {     
     console.log(video_stream_status)
     if(video_stream_status=="True"){
         if(trigger == "doorbell"){
             doorbell_notification_audio.play();
             doorbell_blink = true;
         }
-        else if(trigger == "presence"){
+        else if(trigger == "presence_detection"){
             //TODO: set alarm sound
             doorbell_notification_audio.play();
             presence_blink = true;
