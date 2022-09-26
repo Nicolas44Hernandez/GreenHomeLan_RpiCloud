@@ -1,0 +1,11 @@
+[Unit]
+Description=RPI Cloud
+After=network.target otbr-agent
+
+[Service]
+WorkingDirectory=/home/nico/workspace/GreenHomeLan_RpiCloud/server
+ExecStart=node server.js
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
