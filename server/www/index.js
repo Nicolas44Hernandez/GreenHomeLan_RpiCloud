@@ -1,7 +1,7 @@
 
 /* Constants */
 const socket = io();
-const url_camera = "http://192.168.1.13:5000/video_stream"
+const url_camera = "http://192.168.1.12:5000/video_stream"
 const use_situations_url = "http://192.168.1.20:5000/use_situations/current"
 const loading_frame = "imgs/default.jpg"
 
@@ -30,6 +30,7 @@ use_situation_absence_icon = document.getElementById('icon-absence');
 
 // Audo notifications
 doorbell_notification_audio = document.getElementById("doorbell_audio")
+presence_alarm_audio = document.getElementById("presence_alarm_audio")
 
 /* Inint values */
 let doorbell_blink = false;
@@ -111,15 +112,6 @@ var interval_use_situations = window.setInterval(function(){
     }
 }, 500);
 
-
-/* Buttons on click functions  */
-get_live_stream_button.onclick = function(){    
-    console.log("Get live video stream")
-    video_on_icon.style.visibility = "visible";
-    video_off_icon.style.visibility = "hidden";
-    video_stream.src = url_camera
-};
-
 function clear_use_situation_buttons(){
     console.log("clear_use_situation_buttons")
     use_situation_presence_day_icon.style.color = "white";
@@ -127,7 +119,23 @@ function clear_use_situation_buttons(){
     use_situation_presence_night_icon.style.color = "white";
     use_situation_absence_icon.style.color = "white";
 }
+function disable_use_situations_buttons(disabled){
+    console.log("Use situations buttons disabled: "+ disabled)
+    if (disabled){
+        use_situation_presence_day_button.onclick = null;
+        use_situation_presence_home_office_button.onclick = null;
+        use_situation_presence_night_button.onclick = null;
+        use_situation_absence_button.onclick = null;
+    }
+    else{
+        set_buttons_on_click()
+    }
+    
+}
 function set_use_situation(use_situation){
+    // disable use situation buttons
+    disable_use_situations_buttons(true);
+
     setting_use_situation = true;
     new_use_situation = use_situation
     clear_use_situation_buttons()
@@ -138,19 +146,59 @@ function set_use_situation(use_situation){
     xhr.setRequestHeader("Accept", "application/json");
     xhr.send(null);
 }
+function set_current_use_situation_icon(use_situation){
+    current_use_situation = use_situation;
+    setting_use_situation = false;
 
-use_situation_presence_day_button.onclick = function(){
-    set_use_situation("PRESENCE_DAY_LOW_CONSUMPTION");
+    if(use_situation=="PRESENCE_DAY_LOW_CONSUMPTION"){
+        use_situation_presence_day_icon.style.color = "orangered";
+        use_situation_presence_home_office_icon.style.color = "white";
+        use_situation_presence_night_icon.style.color = "white";
+        use_situation_absence_icon.style.color = "white";
+    }
+    else if(use_situation=="PRESENCE_HOME_OFFICE"){
+        use_situation_presence_day_icon.style.color = "white";
+        use_situation_presence_home_office_icon.style.color = "orangered";
+        use_situation_presence_night_icon.style.color = "white";
+        use_situation_absence_icon.style.color = "white";
+    }
+    else if(use_situation=="PRESENCE_NIGHT_LOW_CONSUMPTION"){
+        use_situation_presence_day_icon.style.color = "white";
+        use_situation_presence_home_office_icon.style.color = "white";
+        use_situation_presence_night_icon.style.color = "orangered";
+        use_situation_absence_icon.style.color = "white";
+    }
+    else if(use_situation=="ABSENCE_LOW_CONSUMPTION"){
+        use_situation_presence_day_icon.style.color = "white";
+        use_situation_presence_home_office_icon.style.color = "white";
+        use_situation_presence_night_icon.style.color = "white";
+        use_situation_absence_icon.style.color = "orangered";
+    }
+    
+
 }
-use_situation_presence_home_office_button.onclick = function(){
-    set_use_situation("PRESENCE_HOME_OFFICE");
+/* Buttons on click functions  */
+function set_buttons_on_click(){
+    use_situation_presence_day_button.onclick = function(){
+        set_use_situation("PRESENCE_DAY_LOW_CONSUMPTION");
+    }
+    use_situation_presence_home_office_button.onclick = function(){
+        set_use_situation("PRESENCE_HOME_OFFICE");
+    }
+    use_situation_presence_night_button.onclick = function(){
+        set_use_situation("PRESENCE_NIGHT_LOW_CONSUMPTION");
+    }
+    use_situation_absence_button.onclick = function(){
+        set_use_situation("ABSENCE_LOW_CONSUMPTION");
+    }
+    get_live_stream_button.onclick = function(){    
+        console.log("Get live video stream")
+        video_on_icon.style.visibility = "visible";
+        video_off_icon.style.visibility = "hidden";
+        video_stream.src = url_camera
+    };    
 }
-use_situation_presence_night_button.onclick = function(){
-    set_use_situation("PRESENCE_NIGHT_LOW_CONSUMPTION");
-}
-use_situation_absence_button.onclick = function(){
-    set_use_situation("ABSENCE_LOW_CONSUMPTION");
-}
+set_buttons_on_click()
 
 // Set socket on receive event functions
 socket.on("connect", () => { 
@@ -170,39 +218,21 @@ socket.on("wifi_status", (wifi_status) => {
 
 socket.on("use_situation", (use_situation) => { 
     console.log("USE SITUATION: "+ use_situation)
+    console.log("new_use_situation: "+ new_use_situation)
 
     if(new_use_situation==""){
         new_use_situation=use_situation
     }
-    if(use_situation==new_use_situation){
-        current_use_situation = use_situation;
-        setting_use_situation = false;
-
-        if(use_situation=="PRESENCE_DAY_LOW_CONSUMPTION"){
-            use_situation_presence_day_icon.style.color = "orangered";
-            use_situation_presence_home_office_icon.style.color = "white";
-            use_situation_presence_night_icon.style.color = "white";
-            use_situation_absence_icon.style.color = "white";
-        }
-        else if(use_situation=="PRESENCE_HOME_OFFICE"){
-            use_situation_presence_day_icon.style.color = "white";
-            use_situation_presence_home_office_icon.style.color = "orangered";
-            use_situation_presence_night_icon.style.color = "white";
-            use_situation_absence_icon.style.color = "white";
-        }
-        else if(use_situation=="PRESENCE_NIGHT_LOW_CONSUMPTION"){
-            use_situation_presence_day_icon.style.color = "white";
-            use_situation_presence_home_office_icon.style.color = "white";
-            use_situation_presence_night_icon.style.color = "orangered";
-            use_situation_absence_icon.style.color = "white";
-        }
-        else if(use_situation=="ABSENCE_LOW_CONSUMPTION"){
-            use_situation_presence_day_icon.style.color = "white";
-            use_situation_presence_home_office_icon.style.color = "white";
-            use_situation_presence_night_icon.style.color = "white";
-            use_situation_absence_icon.style.color = "orangered";
-        }
-    }    
+    if(setting_use_situation){
+        if(use_situation==new_use_situation){
+            // enable use situation buttons
+            disable_use_situations_buttons(false);
+            set_current_use_situation_icon(use_situation)        
+        }        
+    }
+    else{
+        set_current_use_situation_icon(use_situation) 
+    }       
 });
 
 socket.on("alarm_event", (video_stream_status, trigger) => {     
@@ -213,8 +243,7 @@ socket.on("alarm_event", (video_stream_status, trigger) => {
             doorbell_blink = true;
         }
         else if(trigger == "presence_detection"){
-            //TODO: set alarm sound
-            doorbell_notification_audio.play();
+            presence_alarm_audio.play();
             presence_blink = true;
         }        
         console.log("Streaming start")
