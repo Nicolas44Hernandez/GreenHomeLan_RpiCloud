@@ -12,11 +12,10 @@
 </head>
 <body>
     <script src="js/all.js"></script>
-    <div id="cotainer">
-        <div id="column-left" class="column left">
+    <div id="cotainer" class="column-center">
+        <div id="row-top" class="row row-top">
             <audio id="doorbell_audio" src="sounds/ding-dong.mp3" preload="auto"></audio>
             <audio id="presence_alarm_audio" src="sounds/alarm.mp3" preload="auto"></audio>            
-            <div class="row">
                 <div class="column">
                     <div class="row">
                         <div class="column">
@@ -54,35 +53,34 @@
                             </div>
                         </div>
                     </div>
-                </div>         
-            </div>            
-            <div class="row">
-                <iframe id="frame" scrolling="no"></iframe>
-            </div> 
+                </div>
         </div>
-        <div id="use-situations-group" class="column center column-center">
-            <div id="presence-day" class="row">
+        <div class="row">
+            <iframe id="frame" scrolling="no"></iframe>
+        </div> 
+        <div id="use-situations-group" class="row row-use-situations">
+            <div id="presence-day" class="column">
                 <div id="us-button-presence-day" class="button my-button-use-situation">
                     <span id="icon-presence-day" class="my-icon-use-situation">
                         <i class="fa-solid fa-house-user"></i>
                     </span>
                 </div>            
             </div> 
-            <div id="presence-home-office" class="row">
+            <div id="presence-home-office" class="column">
                 <div id="us-button-presence-home-office" class="button my-button-use-situation">
                     <span id="icon-presence-homeoffice" class="my-icon-use-situation">
                         <i class="fa-solid fa-laptop-house"></i>
                     </span>
                 </div>            
             </div>              
-            <div id="presence-presence-night" class="row">
+            <div id="presence-presence-night" class="column">
                 <div id="us-button-presence-night" class="button my-button-use-situation">
                     <span id="icon-presence-night" class="my-icon-use-situation" style="padding-left: 20px;">
                         <i class="fa-solid fa-moon"></i>
                     </span>
                 </div>            
             </div> 
-            <div id="presence-absence" class="row">
+            <div id="presence-absence" class="column">
                 <div id="us-button-absence" class="button my-button-use-situation">
                     <span id="icon-absence" class="my-icon-use-situation">
                         <i class="fa-solid fa-person-walking-dashed-line-arrow-right"></i>
@@ -90,6 +88,6 @@
                 </div>            
             </div>
         </div>
-    </div>   
+    </div>
 </body>
 </html>
