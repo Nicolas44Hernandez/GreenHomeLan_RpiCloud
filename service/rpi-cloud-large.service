@@ -1,10 +1,10 @@
 [Unit]
-Description=RPI Cloud
+Description=RPI Cloud TV
 After=network.target
 
 [Service]
 WorkingDirectory=/home/nico/workspace/GreenHomeLan_RpiCloud
-ExecStart=node server/server.js
+ExecStart=node server_tv/server.js
 Restart=always
 
 [Install]
