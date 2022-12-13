@@ -1,0 +1,75 @@
+body{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: left;
+    background-color: black;
+    margin-left: 25px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+iframe{
+    height: 384px;
+    width: 512px;
+    resize: none;
+    overflow: hidden;
+    border-width: 5px;
+    flex-grow:1;
+    border-color: white;
+    
+}
+.column {
+    float: left;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-right: 4px;
+    margin-left: 0px;
+} 
+.column-center{
+    margin-top: 80px;
+}
+.row{
+    margin: 0px;
+    padding: 0px;
+} 
+.column-icon{
+    margin-bottom: 0px;
+    margin-top: 0px;
+    margin-right: 10px;
+    margin-left: 10px;
+    font-size:2.2em;
+}
+.column-icon-alert{
+    color: yellow;
+}
+.column-icon-video{
+    color: orangered;
+}
+.my-button-use-situation{
+    border: none;
+    color: white;
+    margin-left: 40px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+.my-button-stream {
+    background-color: #eb6f06; 
+    color: white;
+    padding: 10px 25px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 120px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+}
+.my-icon-use-situation{
+    font-size: 4em;
+    color: white;
+}
+.select-down {
+    margin-top: 25px;
+    font-size: 16px;
+}

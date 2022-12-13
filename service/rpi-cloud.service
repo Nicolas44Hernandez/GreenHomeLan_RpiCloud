@@ -1,0 +1,11 @@
+[Unit]
+Description=RPI Cloud
+After=network.target
+
+[Service]
+WorkingDirectory=/home/nico/workspace/GreenHomeLan_RpiCloud
+ExecStart=node server/server.js
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
