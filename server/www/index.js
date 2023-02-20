@@ -17,6 +17,11 @@ video_on_icon = document.getElementById("icon-video-on")
 video_off_icon = document.getElementById("icon-video-off")
 door_icon = document.getElementById('icon-door');
 presence_icon = document.getElementById('icon-presence');
+alimelo_battery_100_icon = document.getElementById("icon-alimelo-battery-100");
+alimelo_battery_75_icon = document.getElementById("icon-alimelo-battery-75");
+alimelo_battery_50_icon = document.getElementById("icon-alimelo-battery-50");
+alimelo_battery_25_icon = document.getElementById("icon-alimelo-battery-25");
+alimelo_battery_0_icon = document.getElementById("icon-alimelo-battery-0");
 
 // Use situations buttons
 use_situation_presence_day_button = document.getElementById('us-button-presence-day'); 
@@ -35,14 +40,26 @@ presence_alarm_audio = document.getElementById("presence_alarm_audio")
 /* Inint values */
 let doorbell_blink = false;
 let presence_blink = false;
+let alimelo_battery_level = 1000;
 wifi_icon.style.color = "gray";
 video_on_icon.style.visibility = "hidden";
 video_on_icon.style.color = "orangered";
 video_off_icon.style.visibility = "visible";
 video_off_icon.style.color = "gray";
+video_stream.src = default_image;
 door_icon.style.visibility = "hidden";
 presence_icon.style.visibility = "hidden";
-video_stream.src = default_image
+alimelo_battery_100_icon.style.visibility = "visible";
+alimelo_battery_100_icon.style.color = "green";
+alimelo_battery_75_icon.style.visibility = "hidden";
+alimelo_battery_75_icon.style.color = "green";
+alimelo_battery_50_icon.style.visibility = "hidden";
+alimelo_battery_50_icon.style.color = "yellow";
+alimelo_battery_25_icon.style.visibility = "hidden";
+alimelo_battery_25_icon.style.color = "yellow";
+alimelo_battery_0_icon.style.visibility = "hidden";
+alimelo_battery_0_icon.style.color = "red";
+
 
 /* Blink function icons */
 var interval_icons = window.setInterval(function(){
@@ -214,6 +231,54 @@ socket.on("wifi_status", (wifi_status) => {
         wifi_icon.style.color = "gray";
         video_stream.src = default_image
     }
+});
+
+socket.on("alimelo_battery_level", (battery_level) => { 
+    let battery_percent = battery_level / 10;
+    console.log("ALIMELO BATTERY PERCENTAGE: "+ battery_percent);
+    
+    const alimelo_battery_100_icon = document.getElementById("icon-alimelo-battery-100");
+    const alimelo_battery_75_icon = document.getElementById("icon-alimelo-battery-75");
+    const alimelo_battery_50_icon = document.getElementById("icon-alimelo-battery-50");
+    const alimelo_battery_25_icon = document.getElementById("icon-alimelo-battery-25");
+    const alimelo_battery_0_icon = document.getElementById("icon-alimelo-battery-0");
+
+    if (battery_percent >= 75) {
+        console.log("ALIMELO >75");
+        alimelo_battery_100_icon.style.visibility= "visible";
+        alimelo_battery_75_icon.style.visibility= "hidden";
+        alimelo_battery_50_icon.style.visibility= "hidden";
+        alimelo_battery_25_icon.style.visibility= "hidden";
+        alimelo_battery_0_icon.style.visibility= "hidden";
+    } else if (battery_percent >= 50) {
+        console.log("ALIMELO >50");
+        alimelo_battery_100_icon.style.visibility= "hidden";
+        alimelo_battery_75_icon.style.visibility= "visible";
+        alimelo_battery_50_icon.style.visibility= "hidden";
+        alimelo_battery_25_icon.style.visibility= "hidden";
+        alimelo_battery_0_icon.style.visibility= "hidden";
+    } else if (battery_percent >= 25) {
+        console.log("ALIMELO >25");
+        alimelo_battery_100_icon.style.visibility= "hidden";
+        alimelo_battery_75_icon.style.visibility= "hidden";
+        alimelo_battery_50_icon.style.visibility= "visible";
+        alimelo_battery_25_icon.style.visibility= "hidden";
+        alimelo_battery_0_icon.style.visibility= "hidden";
+    } else if (battery_percent >= 10) {
+        console.log("ALIMELO >10");
+        alimelo_battery_100_icon.style.visibility= "hidden";
+        alimelo_battery_75_icon.style.visibility= "hidden";
+        alimelo_battery_50_icon.style.visibility= "hidden";
+        alimelo_battery_25_icon.style.visibility= "visible";
+        alimelo_battery_0_icon.style.visibility= "hidden";
+    } else {
+        console.log("ALIMELO <1075");
+        alimelo_battery_100_icon.style.visibility= "hidden";
+        alimelo_battery_75_icon.style.visibility= "hidden";
+        alimelo_battery_50_icon.style.visibility= "hidden";
+        alimelo_battery_25_icon.style.visibility= "hidden";
+        alimelo_battery_0_icon.style.visibility= "visible";
+    }    
 });
 
 socket.on("use_situation", (use_situation) => { 

@@ -26,8 +26,12 @@ iframe{
     margin-left: 0px;
 } 
 .column-center{
-    margin-top: 80px;
+    margin-top: 0px;
 }
+.row-battery{
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+} 
 .row{
     margin: 0px;
     padding: 0px;
@@ -38,6 +42,10 @@ iframe{
     margin-right: 10px;
     margin-left: 10px;
     font-size:2.2em;
+}
+.column-icon-battery{
+    margin: 0px;
+    font-size:1.8em;
 }
 .column-icon-alert{
     color: yellow;

@@ -17,14 +17,18 @@ app.use(bodyParser.urlencoded({
 app.use(express.static(__dirname + '/www'));
 
 app.post('/status', function(request, response){
-  console.log("Received status - wifi:" + request.body.wifi_status + "  use_situation: " + request.body.use_situation)
+  console.log('Received orchestrator status');
+  console.log("Wifi:" + request.body.wifi_status);
+  console.log("Use situation: " + request.body.use_situation);
+  console.log("Alimelo battery level: " + request.body.alimelo_battery_level);
   io.sockets.emit("wifi_status", request.body.wifi_status);
   io.sockets.emit("use_situation", request.body.use_situation);
+  io.sockets.emit("alimelo_battery_level", request.body.alimelo_battery_level);
   response.send(request.body);    // echo the result back
 });
 
-app.post('/alarm_event', function(request, response){
-  console.log("Received- Alarm event notification received: " + request.body.trigger)
+app.post('/alarm', function(request, response){
+  console.log("Received- Alarm event notification received: " + request.body)
   io.sockets.emit("alarm_event", request.body.status, request.body.trigger);
   response.send(request.body);    // echo the result back
 });
