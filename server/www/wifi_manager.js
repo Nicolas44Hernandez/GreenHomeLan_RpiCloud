@@ -9,6 +9,32 @@ toogle_wifi_5GHz = document.getElementById("toogle-wifi-5GHz")
 toogle_wifi_2GHz = document.getElementById("toogle-wifi-2GHz")
 spinner_wifi = document.getElementById("spinner-wifi")
 
+/* Wifi info section */
+wifi_info = document.getElementById('overlapped');
+wifi_info.style.visibility = "hidden";
+toogle_wifi_all.checked = false; 
+toogle_wifi_6GHz.checked = false; 
+toogle_wifi_5GHz.checked = false; 
+toogle_wifi_2GHz.checked = false; 
+spinner_wifi.style.visibility = "hidden";
+
+/* Wifi toogles on event functions  */
+function set_wifi_toogles_on_event(){
+    toogle_wifi_all.addEventListener("change", function() {
+        set_wifi_status(this.checked);        
+    });
+    toogle_wifi_6GHz.addEventListener("change", function() {
+        set_wifi_band_status("6GHz", this.checked);        
+    });
+    toogle_wifi_5GHz.addEventListener("change", function() {
+        set_wifi_band_status("5GHz", this.checked);        
+    });
+    toogle_wifi_2GHz.addEventListener("change", function() {
+        set_wifi_band_status("2GHz", this.checked);        
+    });
+}
+set_wifi_toogles_on_event();
+
 function set_wifi_status(new_status){
     console.log("New wifi status:" + new_status);
     spinner_wifi.style.visibility = "visible";

@@ -22,7 +22,7 @@ app.post('/status', function(request, response){
   console.log("Use situation: " + request.body.use_situation);
   console.log("Alimelo electric socket status: " + request.body.alimelo_electric_socket_status);
   console.log("Alimelo battery level: " + request.body.alimelo_battery_level);
-  io.sockets.emit("wifi_status", request.body.wifi_status);
+  io.sockets.emit("wifi_status_general", request.body.wifi_status);
   io.sockets.emit("use_situation", request.body.use_situation);
   io.sockets.emit("alimelo_battery_level", request.body.alimelo_battery_level);
   io.sockets.emit("alimelo_electric_socket_status", request.body.alimelo_electric_socket_status);
