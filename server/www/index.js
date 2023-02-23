@@ -8,13 +8,12 @@ let default_image = "imgs/default.jpg"
 /* Elements */
 // Video stream frame and button
 video_stream = document.getElementById("frame")
-get_live_stream_button = document.getElementById("get_live_stream_button")
 
-
-// Notification icons
-wifi_icon = document.getElementById("icon-wifi")
-video_on_icon = document.getElementById("icon-video-on")
-video_off_icon = document.getElementById("icon-video-off")
+/* Header icons */
+home_icon = document.getElementById("icon-home");
+wifi_icon = document.getElementById("icon-wifi");
+video_icon = document.getElementById("icon-video");
+plug_icon = document.getElementById("icon-plug");
 door_icon = document.getElementById('icon-door');
 presence_icon = document.getElementById('icon-presence');
 alimelo_battery_100_icon = document.getElementById("icon-alimelo-battery-100");
@@ -23,7 +22,7 @@ alimelo_battery_50_icon = document.getElementById("icon-alimelo-battery-50");
 alimelo_battery_25_icon = document.getElementById("icon-alimelo-battery-25");
 alimelo_battery_0_icon = document.getElementById("icon-alimelo-battery-0");
 
-// Use situations buttons
+/* Use situations buttons */
 use_situation_presence_day_button = document.getElementById('us-button-presence-day'); 
 use_situation_presence_day_icon = document.getElementById('icon-presence-day');  
 use_situation_presence_home_office_button = document.getElementById('us-button-presence-home-office'); 
@@ -33,33 +32,71 @@ use_situation_presence_night_icon = document.getElementById('icon-presence-night
 use_situation_absence_button = document.getElementById('us-button-absence');
 use_situation_absence_icon = document.getElementById('icon-absence');
 
-// Audo notifications
+/* Audio notifications */
 doorbell_notification_audio = document.getElementById("doorbell_audio")
 presence_alarm_audio = document.getElementById("presence_alarm_audio")
 
+/* Wifi Info section  */
+toogle_wifi_all = document.getElementById("toogle-wifi-all")
+toogle_wifi_6GHz = document.getElementById("toogle-wifi-6GHz")
+toogle_wifi_5GHz = document.getElementById("toogle-wifi-5GHz")
+toogle_wifi_2GHz = document.getElementById("toogle-wifi-2GHz")
+spinner_wifi = document.getElementById("spinner-wifi")
+
+
+
 /* Inint values */
+// Notifications
 let doorbell_blink = false;
 let presence_blink = false;
 let alimelo_battery_level = 1000;
+let streaming = false;
+// Header icons
+home_icon.style.color = "orangered";
+home_icon.style.visibility = "visible";
 wifi_icon.style.color = "gray";
-video_on_icon.style.visibility = "hidden";
-video_on_icon.style.color = "orangered";
-video_off_icon.style.visibility = "visible";
-video_off_icon.style.color = "gray";
+video_icon.style.visibility = "visible";
+video_icon.style.color = "gray";
 video_stream.src = default_image;
-door_icon.style.visibility = "hidden";
-presence_icon.style.visibility = "hidden";
+plug_icon.style.visibility = "visible";
+plug_icon.style.color = "gray";
+door_icon.style.visibility = "visible";
+presence_icon.style.visibility = "visible";
+// Battery icons
 alimelo_battery_100_icon.style.visibility = "visible";
 alimelo_battery_100_icon.style.color = "green";
-alimelo_battery_75_icon.style.visibility = "hidden";
+alimelo_battery_75_icon.style.visibility = "visible";
 alimelo_battery_75_icon.style.color = "green";
-alimelo_battery_50_icon.style.visibility = "hidden";
+alimelo_battery_50_icon.style.visibility = "visible";
 alimelo_battery_50_icon.style.color = "yellow";
-alimelo_battery_25_icon.style.visibility = "hidden";
+alimelo_battery_25_icon.style.visibility = "visible";
 alimelo_battery_25_icon.style.color = "yellow";
-alimelo_battery_0_icon.style.visibility = "hidden";
+alimelo_battery_0_icon.style.visibility = "visible";
 alimelo_battery_0_icon.style.color = "red";
+// Use situations 
+let setting_use_situation = false;
+let current_use_situation = "";
+let new_use_situation = ""
+// Info section 
+wifi_info = document.getElementById('overlapped');
+wifi_info.style.visibility = "hidden";
 
+// Set overlapped container for info
+overlay = document.getElementById('overlapped');
+const iframeRect = video_stream.getBoundingClientRect();
+const constant_top = iframeRect.top + 70;
+const constant_left = iframeRect.top + 110;
+overlay.style.top = constant_top + 'px';
+overlay.style.left = constant_left + 'px';
+overlay.style.width = iframeRect.width + 'px';
+overlay.style.height = iframeRect.height + 'px';
+
+// Wifi Info section 
+toogle_wifi_all.checked = false; 
+toogle_wifi_6GHz.checked = false; 
+toogle_wifi_5GHz.checked = false; 
+toogle_wifi_2GHz.checked = false; 
+spinner_wifi.style.visibility = "hidden";
 
 /* Blink function icons */
 var interval_icons = window.setInterval(function(){
@@ -86,9 +123,6 @@ var interval_icons = window.setInterval(function(){
 }, 500);
 
 /* Blink function use situations icons */
-let setting_use_situation = false;
-let current_use_situation = "";
-let new_use_situation = ""
 var interval_use_situations = window.setInterval(function(){
     if(setting_use_situation){
         console.log("blinking")
@@ -136,6 +170,16 @@ function clear_use_situation_buttons(){
     use_situation_presence_night_icon.style.color = "white";
     use_situation_absence_icon.style.color = "white";
 }
+
+function clear_header_icons(){
+    wifi_info.style.visibility = "hidden";
+    video_stream.src = default_image;    
+    home_icon.style.color = "gray";
+    video_icon.style.color = "gray";
+    wifi_icon.style.color = "gray";
+    plug_icon.style.color = "gray";
+}
+
 function disable_use_situations_buttons(disabled){
     console.log("Use situations buttons disabled: "+ disabled)
     if (disabled){
@@ -149,6 +193,7 @@ function disable_use_situations_buttons(disabled){
     }
     
 }
+
 function set_use_situation(use_situation){
     // disable use situation buttons
     disable_use_situations_buttons(true);
@@ -163,6 +208,7 @@ function set_use_situation(use_situation){
     xhr.setRequestHeader("Accept", "application/json");
     xhr.send(null);
 }
+
 function set_current_use_situation_icon(use_situation){
     current_use_situation = use_situation;
     setting_use_situation = false;
@@ -190,12 +236,45 @@ function set_current_use_situation_icon(use_situation){
         use_situation_presence_home_office_icon.style.color = "white";
         use_situation_presence_night_icon.style.color = "white";
         use_situation_absence_icon.style.color = "orangered";
-    }
-    
-
+    }  
 }
+
 /* Buttons on click functions  */
 function set_buttons_on_click(){
+    home_icon.onclick = function(){        
+        clear_header_icons();
+        video_stream.src = default_image;
+        home_icon.style.color = "orangered";
+    }
+    wifi_icon.onclick = function(){
+        clear_header_icons();
+        wifi_icon.style.color = "orangered";
+        video_stream.src = null;
+        wifi_info.style.visibility = "visible";
+    }
+    video_icon.onclick = function(){   
+        clear_header_icons();
+        console.log("video_stream.src:");  
+        console.log(video_stream.src);  
+        if(!streaming){
+            console.log("Get live video stream");            
+            video_icon.style.color = "orangered";
+            video_stream.src = url_camera;
+            streaming = true;
+        }
+        else{
+            console.log("Stop video stream");            
+            video_stream.src = default_image;
+            home_icon.style.color = "orangered";
+            streaming = false;
+        }
+        
+    }
+    plug_icon.onclick = function(){
+        clear_header_icons();
+        plug_icon.style.color = "orangered";
+        video_stream.src = null;
+    }
     use_situation_presence_day_button.onclick = function(){
         set_use_situation("PRESENCE_DAY_LOW_CONSUMPTION");
     }
@@ -207,20 +286,28 @@ function set_buttons_on_click(){
     }
     use_situation_absence_button.onclick = function(){
         set_use_situation("ABSENCE_LOW_CONSUMPTION");
-    }
-    get_live_stream_button.onclick = function(){    
-        console.log("Get live video stream")
-        video_on_icon.style.visibility = "visible";
-        video_off_icon.style.visibility = "hidden";
-        video_stream.src = url_camera
-    };
+    }  
 }
 set_buttons_on_click()
 
-// Set socket on receive event functions
-socket.on("connect", () => { 
-    justButton = true;
-});
+/* Wifi toogles on event functions  */
+function set_wifi_toogles_on_event(){
+    toogle_wifi_all.addEventListener("change", function() {
+        set_wifi_status(this.checked);        
+    });
+    toogle_wifi_6GHz.addEventListener("change", function() {
+        set_wifi_band_status("6GHz", this.checked);        
+    });
+    toogle_wifi_5GHz.addEventListener("change", function() {
+        set_wifi_band_status("5GHz", this.checked);        
+    });
+    toogle_wifi_2GHz.addEventListener("change", function() {
+        set_wifi_band_status("2GHz", this.checked);        
+    });
+}
+set_wifi_toogles_on_event();
+
+/* Set socket on receive event functions */
 
 socket.on("wifi_status", (wifi_status) => { 
     console.log("WIFI STATUS: "+ wifi_status)
@@ -230,6 +317,16 @@ socket.on("wifi_status", (wifi_status) => {
     else{
         wifi_icon.style.color = "gray";
         video_stream.src = default_image
+    }
+});
+
+socket.on("alimelo_electric_socket_status", (socket_status) => { 
+    console.log("ALIMELO SOCKET STATUS: "+ socket_status)
+    if(socket_status=="True"){
+        plug_icon.style.color = "green";
+    }
+    else{
+        plug_icon.style.color = "red";
     }
 });
 
@@ -300,29 +397,31 @@ socket.on("use_situation", (use_situation) => {
     }       
 });
 
-socket.on("alarm_event", (video_stream_status, trigger) => {     
-    console.log(video_stream_status)
-    if(video_stream_status=="True"){
-        if(trigger == "doorbell"){
-            doorbell_notification_audio.play();
-            doorbell_blink = true;
-        }
-        else if(trigger == "presence_detection"){
-            presence_alarm_audio.play();
-            presence_blink = true;
-        }        
-        console.log("Streaming start")
-        video_on_icon.style.visibility = "visible";
-        video_off_icon.style.visibility = "hidden";
-        video_stream.src = url_camera
-    }
-    else{
-        console.log("Streaming end")
-        doorbell_blink = false;
-        presence_blink = false;        
-        video_on_icon.style.visibility = "hidden";
-        video_off_icon.style.visibility = "visible";
-        video_stream.src = default_image
-    }
-});
+function set_end_of_alarm(){
+    console.log("Streaming end")
+    doorbell_blink = false;
+    presence_blink = false;        
+    video_icon.style.color = "gray"
+    video_stream.src = default_image
+}
 
+function set_start_of_stream(){   
+    console.log("Streaming start")
+    video_icon.style.color = "orangered"
+    video_stream.src = url_camera
+}
+
+socket.on("alarm_event", (trigger) => {
+    if(trigger == "doorbell"){
+        doorbell_notification_audio.play();
+        doorbell_blink = true;
+    }
+    else if(trigger == "presence_detection"){
+        presence_alarm_audio.play();
+        presence_blink = true;
+    } 
+    // Set video stream start
+    setTimeout(set_start_of_stream, 8000);
+    // Set end of alarm (video stream)
+    setTimeout(set_end_of_alarm, 38000);
+});

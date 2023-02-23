@@ -20,16 +20,19 @@ app.post('/status', function(request, response){
   console.log('Received orchestrator status');
   console.log("Wifi:" + request.body.wifi_status);
   console.log("Use situation: " + request.body.use_situation);
+  console.log("Alimelo electric socket status: " + request.body.alimelo_electric_socket_status);
   console.log("Alimelo battery level: " + request.body.alimelo_battery_level);
   io.sockets.emit("wifi_status", request.body.wifi_status);
   io.sockets.emit("use_situation", request.body.use_situation);
   io.sockets.emit("alimelo_battery_level", request.body.alimelo_battery_level);
+  io.sockets.emit("alimelo_electric_socket_status", request.body.alimelo_electric_socket_status);
   response.send(request.body);    // echo the result back
 });
 
 app.post('/alarm', function(request, response){
-  console.log("Received- Alarm event notification received: " + request.body)
-  io.sockets.emit("alarm_event", request.body.status, request.body.trigger);
+  console.log("Received- Alarm event notification received: ");
+  console.log("trigger: " + request.body.trigger);
+  io.sockets.emit("alarm_event", request.body.trigger);
   response.send(request.body);    // echo the result back
 });
 

@@ -24,18 +24,22 @@ iframe{
     margin-bottom: 4px;
     margin-right: 4px;
     margin-left: 0px;
+    /*border: 1px solid white;*/
 } 
 .column-center{
     margin-top: 0px;
 }
 .row-battery{
-    margin-bottom: 30px;
-    padding-bottom: 30px;
+    margin-left: 10px;
 } 
 .row{
     margin: 0px;
     padding: 0px;
+    /*border: 1px solid red;*/
 } 
+.row-use-situations-top{
+    margin-top: 20px;
+}
 .column-icon{
     margin-bottom: 0px;
     margin-top: 0px;
@@ -60,19 +64,6 @@ iframe{
     margin-top: 10px;
     margin-bottom: 15px;
 }
-.my-button-stream {
-    background-color: #eb6f06; 
-    color: white;
-    padding: 10px 25px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-left: 0px;
-    margin-right: 120px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 20px;
-}
 .my-icon-use-situation{
     font-size: 4em;
     color: white;
@@ -81,3 +72,77 @@ iframe{
     margin-top: 25px;
     font-size: 16px;
 }
+.wifi-info {
+    font-size:1.8em;
+    color: white;
+    margin: 5px;
+}
+.spinner {
+    font-size:1.8em;
+    color: orangered;
+    margin: 5px;
+}
+.wifi-band-info {
+    font-size:1.8em;
+    color: white;
+    margin-top: 5px;
+    margin-left: 20px;
+    margin-bottom: 5px;
+    margin-right: 2px;   
+}
+#overlapped {
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    z-index: 1;
+  }
+
+/*Switchs style*/
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: red;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  input:checked + .slider {
+    background-color: green;
+  }
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /*Info container*/
+.wifi-container {
+    display: flex;
+    flex-direction: column;    
+    visibility: hidden;
+  }
