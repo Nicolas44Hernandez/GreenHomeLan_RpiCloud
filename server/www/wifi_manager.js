@@ -1,6 +1,7 @@
 /* RPI box URL */
 // TODO: expose to internet 
 const base_wifi_url = 'http://192.168.1.20:5000/wifi';
+const socket_wifi = io();
 
 /* Wifi Info section  */
 toogle_wifi_all = document.getElementById("toogle-wifi-all")
@@ -10,7 +11,7 @@ toogle_wifi_2GHz = document.getElementById("toogle-wifi-2GHz")
 spinner_wifi = document.getElementById("spinner-wifi")
 
 /* Wifi info section */
-wifi_info = document.getElementById('overlapped');
+wifi_info = document.getElementById('overlapped_wifi');
 wifi_info.style.visibility = "hidden";
 toogle_wifi_all.checked = false; 
 toogle_wifi_6GHz.checked = false; 
@@ -19,18 +20,22 @@ toogle_wifi_2GHz.checked = false;
 spinner_wifi.style.visibility = "hidden";
 
 /* Wifi toogles on event functions  */
-function set_wifi_toogles_on_event(){
+function set_wifi_toogles_on_event(){    
     toogle_wifi_all.addEventListener("change", function() {
+        console.log("Set wifi status: " + this.checked);
         set_wifi_status(this.checked);        
     });
     toogle_wifi_6GHz.addEventListener("change", function() {
+        console.log("Set 6GHz band status: " + this.checked);    
         set_wifi_band_status("6GHz", this.checked);        
     });
     toogle_wifi_5GHz.addEventListener("change", function() {
+        console.log("Set 5GHz band status: " + this.checked);
         set_wifi_band_status("5GHz", this.checked);        
     });
     toogle_wifi_2GHz.addEventListener("change", function() {
-        set_wifi_band_status("2GHz", this.checked);        
+        console.log("Set 2.4GHz band status: " + this.checked);
+        set_wifi_band_status("2.4GHz", this.checked);        
     });
 }
 set_wifi_toogles_on_event();
@@ -50,17 +55,27 @@ function set_wifi_status(new_status){
     console.log("url: "+ url);
 
     // send the request and wait for the response
-    fetch(url)
-    .then(response => {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
+    xhr.setRequestHeader("Accept", "*/*");
+    xhr.send(null);
+
+    xhr.onload = function() {        
+        const response_json = JSON.parse(xhr.responseText);
+        const received_new_status = response_json.status;
+        if (xhr.status === 200 && received_new_status == new_status) {
+            toogle_wifi_all.checked = new_status;                  
+        } else {
+            toogle_wifi_all.checked = !new_status; 
+            console.error("Error:", xhr.statusText);
+        }
         spinner_wifi.style.visibility = "hidden";
-        console.log("TODO: manage response")
-        return response.json();
-      })
-    .catch(error => {
+    };
+    xhr.onerror = function() {
+        console.error("Network error");
+        toogle_wifi_all.checked = !new_status; 
         spinner_wifi.style.visibility = "hidden";
-        toogle_wifi_all.checked = !new_status;
-        console.error(error);        
-    });
+    };
 }
 
 function set_wifi_band_status(band, new_status){
@@ -76,24 +91,57 @@ function set_wifi_band_status(band, new_status){
     // construct the final URL with the query string
     const url = `${base_wifi_url}/bands/${band}?${queryString}`;
     console.log("url: "+ url);
+    
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
+    xhr.setRequestHeader("Accept", "*/*");
+    xhr.send(null);
 
-    // send the request and wait for the response
-    fetch(url)
-    .then(response => {
-        console.log("TODO: manage response")
-        return response.json();
-      })
-    .catch(error => {
+    xhr.onload = function() {        
+        const response_json = JSON.parse(xhr.responseText);
+        const received_new_status = response_json.status;
+        if (xhr.status === 200 && received_new_status == new_status) {
+            if(band=="6GHz"){
+                toogle_wifi_6GHz.checked = new_status; 
+            }
+            else if(band=="5GHz"){
+                toogle_wifi_5GHz.checked = new_status; 
+            }
+            else if(band=="2.4GHz"){
+                toogle_wifi_2GHz.checked = new_status; 
+            }            
+        } else {
+            if(band=="6GHz"){
+                toogle_wifi_6GHz.checked = !new_status; 
+            }
+            else if(band=="5GHz"){
+                toogle_wifi_5GHz.checked = !new_status; 
+            }
+            else if(band=="2.4GHz"){
+                toogle_wifi_2GHz.checked = !new_status; 
+            }    
+            console.error("Error:", xhr.statusText);
+        }
         spinner_wifi.style.visibility = "hidden";
-        if(band == "6GHz"){
-            toogle_wifi_6GHz.checked = !new_status;
+    };
+    xhr.onerror = function() {
+        console.error("Network error");
+        if(band=="6GHz"){
+            toogle_wifi_6GHz.checked = !new_status; 
         }
-        else if(band == "5GHz"){
-            toogle_wifi_5GHz.checked = !new_status;
+        else if(band=="5GHz"){
+            toogle_wifi_5GHz.checked = !new_status; 
         }
-        else if(band == "2GHz"){
-            toogle_wifi_2GHz.checked = !new_status;
-        }        
-        console.error(error);        
-    });
+        else if(band=="2.4GHz"){
+            toogle_wifi_2GHz.checked = !new_status; 
+        }    
+        spinner_wifi.style.visibility = "hidden";
+    };
 }
+
+socket_wifi.on("wifi_status_detail", (wifi_status, band_2GHz_status, band_5GHz_status, band_6GHz_status) => { 
+    toogle_wifi_all.checked = wifi_status; 
+    toogle_wifi_2GHz.checked = band_2GHz_status; 
+    toogle_wifi_5GHz.checked = band_5GHz_status; 
+    toogle_wifi_6GHz.checked = band_6GHz_status; 
+});

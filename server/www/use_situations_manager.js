@@ -1,5 +1,6 @@
 /* Constants */
-const use_situations_url = "http://192.168.1.20:5000/use_situations/current"
+const socket_use_situation = io();
+const base_use_situations_url = "http://192.168.1.20:5000/use_situations"
 
 /* Use situations buttons */
 use_situation_presence_day_button = document.getElementById('us-button-presence-day'); 
@@ -14,40 +15,67 @@ use_situation_absence_icon = document.getElementById('icon-absence');
 // Use situations 
 let setting_use_situation = false;
 let current_use_situation = "";
-let new_use_situation = ""
+let new_use_situation = "";
+
+/* Buttons on click functions  */
+function set_buttons_on_click(){
+    
+    use_situation_presence_day_button.onclick = function(){
+        if(!setting_use_situation){
+            console.log("PRESENCE_DAY_LOW_CONSUMPTION");
+            set_use_situation("PRESENCE_DAY_LOW_CONSUMPTION");
+        }        
+    }
+    use_situation_presence_home_office_button.onclick = function(){
+        if(!setting_use_situation){
+            console.log("PRESENCE_HOME_OFFICE");
+            set_use_situation("PRESENCE_HOME_OFFICE");
+        }    
+    }
+    use_situation_presence_night_button.onclick = function(){
+        if(!setting_use_situation){
+            console.log("PRESENCE_NIGHT_LOW_CONSUMPTION");
+            set_use_situation("PRESENCE_NIGHT_LOW_CONSUMPTION");
+        }
+    }
+    use_situation_absence_button.onclick = function(){
+        if(!setting_use_situation){
+            console.log("ABSENCE_LOW_CONSUMPTION");
+            set_use_situation("ABSENCE_LOW_CONSUMPTION");
+        }
+    }  
+}
+set_buttons_on_click()
 
 /* Blink function use situations icons */
 var interval_use_situations = window.setInterval(function(){
     if(setting_use_situation){
-        console.log("blinking")
-        if(new_use_situation=="PRESENCE_DAY_LOW_CONSUMPTION"){
-            if(use_situation_presence_day_icon.style.visibility == 'hidden'){
-                use_situation_presence_day_icon.style.visibility = 'visible';
-            }else{
-                use_situation_presence_day_icon.style.visibility = 'hidden';
-            }
+        let blinking = true;
+        switch(new_use_situation){
+            case "PRESENCE_DAY_LOW_CONSUMPTION":
+                blinking_icon = document.getElementById('icon-presence-day');    
+                break;                     
+            case "PRESENCE_HOME_OFFICE":
+                blinking_icon = document.getElementById('icon-presence-homeoffice'); 
+                break; 
+            case "PRESENCE_NIGHT_LOW_CONSUMPTION":
+                blinking_icon = document.getElementById('icon-presence-night');
+                break; 
+            case "ABSENCE_LOW_CONSUMPTION":
+                blinking_icon = document.getElementById('icon-absence');
+                break; 
+            default:
+                blinking = false;
+                console.error("Invalid use situation: "+ new_use_situation);
+            
         }
-        else if(new_use_situation=="PRESENCE_HOME_OFFICE"){
-            if(use_situation_presence_home_office_icon.style.visibility == 'hidden'){
-                use_situation_presence_home_office_icon.style.visibility = 'visible';
+        if(blinking){
+            if(blinking_icon.style.visibility == 'hidden'){
+                blinking_icon.style.visibility = 'visible';
             }else{
-                use_situation_presence_home_office_icon.style.visibility = 'hidden';
+                blinking_icon.style.visibility = 'hidden';
             }
-        }
-        else if(new_use_situation=="PRESENCE_NIGHT_LOW_CONSUMPTION"){
-            if(use_situation_presence_night_icon.style.visibility == 'hidden'){
-                use_situation_presence_night_icon.style.visibility = 'visible';
-            }else{
-                use_situation_presence_night_icon.style.visibility = 'hidden';
-            }
-        }
-        else if(new_use_situation=="ABSENCE_LOW_CONSUMPTION"){
-            if(use_situation_absence_icon.style.visibility == 'hidden'){
-                use_situation_absence_icon.style.visibility = 'visible';
-            }else{
-                use_situation_absence_icon.style.visibility = 'hidden';
-            }
-        }
+        }        
     }
     else {
         use_situation_presence_day_icon.style.visibility = 'visible';
@@ -58,47 +86,57 @@ var interval_use_situations = window.setInterval(function(){
 }, 500);
 
 function clear_use_situation_buttons(){
-    console.log("clear_use_situation_buttons")
     use_situation_presence_day_icon.style.color = "white";
     use_situation_presence_home_office_icon.style.color = "white";
     use_situation_presence_night_icon.style.color = "white";
     use_situation_absence_icon.style.color = "white";
 }
 
-function disable_use_situations_buttons(disabled){
-    console.log("Use situations buttons disabled: "+ disabled)
-    if (disabled){
-        use_situation_presence_day_button.onclick = null;
-        use_situation_presence_home_office_button.onclick = null;
-        use_situation_presence_night_button.onclick = null;
-        use_situation_absence_button.onclick = null;
-    }
-    else{
-        set_buttons_on_click()
-    }
-    
-}
-
-
-function set_use_situation(use_situation){
-    // TODO: review
-    // disable use situation buttons
-    disable_use_situations_buttons(true);
-
+function set_use_situation(use_situation){    
+    new_use_situation = use_situation;
     setting_use_situation = true;
-    new_use_situation = use_situation
     clear_use_situation_buttons()
     console.log("Change use situation to: "+use_situation)
+
+    // query params
+    const params = {use_situation: use_situation};    
+    // convert the object to a query string
+    const queryString = Object.entries(params)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .join('&');
+    // construct the final URL with the query string
+    const url = `${base_use_situations_url}/current?${queryString}`;
+    console.log("url: "+ url);
+
+    // send the request and wait for the response
     let xhr = new XMLHttpRequest();
-    let params = "?use_situation=" + use_situation
-    xhr.open("POST", use_situations_url+params);
-    xhr.setRequestHeader("Accept", "application/json");
+    xhr.open("POST", url);
+    xhr.setRequestHeader("Accept", "*/*");
     xhr.send(null);
+
+    xhr.onload = function() {        
+        const response_json = JSON.parse(xhr.responseText);
+        if (xhr.status === 200) {
+            console.log("OK");
+            console.log(xhr.responseText);
+            set_current_use_situation_icon(use_situation)
+        } else {
+            console.error("Error:", xhr.statusText);
+            clear_use_situation_buttons();
+        }
+        setting_use_situation = false;        
+    };
+    xhr.onerror = function() {
+        console.error("Network error"); 
+        clear_use_situation_buttons();
+        setting_use_situation = false;       
+    };
 }
 
 function set_current_use_situation_icon(use_situation){
     current_use_situation = use_situation;
     setting_use_situation = false;
+    new_use_situation = "";
 
     if(use_situation=="PRESENCE_DAY_LOW_CONSUMPTION"){
         use_situation_presence_day_icon.style.color = "orangered";
@@ -126,41 +164,11 @@ function set_current_use_situation_icon(use_situation){
     }  
 }
 
-/* Buttons on click functions  */
-function set_buttons_on_click(){
-    
-    use_situation_presence_day_button.onclick = function(){
-        set_use_situation("PRESENCE_DAY_LOW_CONSUMPTION");
-    }
-    use_situation_presence_home_office_button.onclick = function(){
-        set_use_situation("PRESENCE_HOME_OFFICE");
-    }
-    use_situation_presence_night_button.onclick = function(){
-        set_use_situation("PRESENCE_NIGHT_LOW_CONSUMPTION");
-    }
-    use_situation_absence_button.onclick = function(){
-        set_use_situation("ABSENCE_LOW_CONSUMPTION");
-    }  
-}
-set_buttons_on_click()
-
-socket.on("use_situation", (use_situation) => { 
-    console.log("USE SITUATION: "+ use_situation)
-    console.log("new_use_situation: "+ new_use_situation)
-
-    if(new_use_situation==""){
-        new_use_situation=use_situation
-    }
-    if(setting_use_situation){
-        if(use_situation==new_use_situation){
-            // enable use situation buttons
-            disable_use_situations_buttons(false);
-            set_current_use_situation_icon(use_situation)        
-        }        
-    }
-    else{
-        set_current_use_situation_icon(use_situation) 
-    }       
+socket_use_situation.on("use_situation", (use_situation) => { 
+    console.log("RECEIVED USE SITUATION: "+ use_situation)
+    if(!setting_use_situation){
+        set_current_use_situation_icon(use_situation);    
+    }   
 });
 
 

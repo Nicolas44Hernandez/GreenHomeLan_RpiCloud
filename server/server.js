@@ -16,13 +16,28 @@ app.use(bodyParser.urlencoded({
 }))
 app.use(express.static(__dirname + '/www'));
 
+function strictBoolean(str) {
+  return str.toLowerCase() === "true";
+}
+
 app.post('/status', function(request, response){
   console.log('Received orchestrator status');
-  console.log("Wifi:" + request.body.wifi_status);
+  console.log("Wifi status:" + request.body.wifi_status);
+  console.log("Wifi 2.4GHz status:" + request.body.band_2GHz_status);
+  console.log("Wifi 5GHz status:" + request.body.band_5GHz_status);  
+  console.log("Wifi 6GHz status:" + request.body.band_2GHz_status);
   console.log("Use situation: " + request.body.use_situation);
   console.log("Alimelo electric socket status: " + request.body.alimelo_electric_socket_status);
   console.log("Alimelo battery level: " + request.body.alimelo_battery_level);
+  io.sockets.emit("home_connected", true);
   io.sockets.emit("wifi_status_general", request.body.wifi_status);
+  io.sockets.emit(
+    "wifi_status_detail", 
+    Boolean(strictBoolean(request.body.wifi_status)),
+    Boolean(strictBoolean(request.body.band_2GHz_status)), 
+    Boolean(strictBoolean(request.body.band_5GHz_status)), 
+    Boolean(strictBoolean(request.body.band_6GHz_status)),
+  );
   io.sockets.emit("use_situation", request.body.use_situation);
   io.sockets.emit("alimelo_battery_level", request.body.alimelo_battery_level);
   io.sockets.emit("alimelo_electric_socket_status", request.body.alimelo_electric_socket_status);
