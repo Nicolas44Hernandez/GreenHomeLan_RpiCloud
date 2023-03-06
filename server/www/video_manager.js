@@ -29,4 +29,5 @@ function hide_image(){
     video_stream.src = null;
     video_icon.style.color = "gray";
     wifi_info.style.visibility = "hidden";
+    alimelo_info.style.visibility = "hidden";
 }

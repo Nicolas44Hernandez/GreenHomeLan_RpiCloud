@@ -36,18 +36,23 @@ alimelo_battery_25_icon.style.color = "yellow";
 alimelo_battery_0_icon.style.visibility = "hidden";
 alimelo_battery_0_icon.style.color = "red";
 
-// Set overlapped container for info
+// Set overlapped containers for info
 video_stream_frame = document.getElementById("frame")
-overlay = document.getElementById('overlapped_wifi');
+overlay_wifi = document.getElementById('overlapped_wifi');
+overlay_alimelo = document.getElementById('overlapped_alimelo');
 const iframeRect = video_stream_frame.getBoundingClientRect();
-const constant_top = iframeRect.top + 70;
-const constant_left = iframeRect.top + 110;
-const constant_width = iframeRect.width - 220;
-const constant_height = iframeRect.height - 80;
-overlay.style.top = constant_top + 'px';
-overlay.style.left = constant_left + 'px';
-overlay.style.width = constant_width + 'px';
-overlay.style.height = constant_height + 'px';
+
+// Set wifi overlapped container dimensions
+overlay_wifi.style.top = iframeRect.top + 70 + 'px';
+overlay_wifi.style.left = iframeRect.left + 160 + 'px';
+overlay_wifi.style.width = iframeRect.width - 220 + 'px';
+overlay_wifi.style.height = iframeRect.height - 80 + 'px';
+
+// Set alimelo overlapped container dimensions
+overlay_alimelo.style.top = iframeRect.top + 'px';
+overlay_alimelo.style.left = iframeRect.left + 'px';
+overlay_alimelo.style.width = iframeRect.width + 'px';
+overlay_alimelo.style.height = iframeRect.height + 'px';
 
 function clear_header_icons(){
     wifi_info.style.visibility = "hidden";
@@ -79,6 +84,7 @@ function set_buttons_on_click(){
     }
     plug_icon.onclick = function(){
         hide_image();
+        alimelo_info.style.visibility = "visible";
     }    
 }
 set_buttons_on_click()

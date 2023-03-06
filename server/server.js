@@ -27,8 +27,15 @@ app.post('/status', function(request, response){
   console.log("Wifi 5GHz status:" + request.body.band_5GHz_status);  
   console.log("Wifi 6GHz status:" + request.body.band_2GHz_status);
   console.log("Use situation: " + request.body.use_situation);
-  console.log("Alimelo electric socket status: " + request.body.alimelo_electric_socket_status);
+  console.log("Alimelo electric socket status: " + request.body.alimelo_power_supplied);
   console.log("Alimelo battery level: " + request.body.alimelo_battery_level);
+  console.log("Alimelo alimelo_current_mA: " + request.body.alimelo_current_mA);
+  console.log("Power Outlet 0 status: " + request.body.po0_status);
+  console.log("Power Outlet 0 powered: " + request.body.po0_powered);
+  console.log("Power Outlet 1 status: " + request.body.po1_status);
+  console.log("Power Outlet 1 powered: " + request.body.po1_powered);
+  console.log("Power Outlet 2 status: " + request.body.po2_status);
+  console.log("Power Outlet 2 powered: " + request.body.po2_powered);
   io.sockets.emit("home_connected", true);
   io.sockets.emit("wifi_status_general", request.body.wifi_status);
   io.sockets.emit(
@@ -40,14 +47,32 @@ app.post('/status', function(request, response){
   );
   io.sockets.emit("use_situation", request.body.use_situation);
   io.sockets.emit("alimelo_battery_level", request.body.alimelo_battery_level);
-  io.sockets.emit("alimelo_electric_socket_status", request.body.alimelo_electric_socket_status);
+  io.sockets.emit("alimelo_electric_socket_status", request.body.alimelo_power_supplied);
+  io.sockets.emit(
+    "alimelo_status_detail",    
+    Number(request.body.alimelo_busvoltage),
+    Number(request.body.alimelo_shuntvoltage),
+    Number(request.body.alimelo_loadvoltage),
+    Number(request.body.alimelo_current_mA),
+    Number(request.body.alimelo_power_mW),
+    Number(request.body.alimelo_battery_level),
+    Boolean(strictBoolean(request.body.alimelo_power_supplied)),
+    Boolean(strictBoolean(request.body.alimelo_is_powered_by_battery)),
+    Boolean(strictBoolean(request.body.alimelo_is_charging)),
+  );
+  io.sockets.emit(
+    "power_outlets_status", 
+    Boolean(strictBoolean(request.body.po0_status)),
+    Boolean(strictBoolean(request.body.po1_status)),
+    Boolean(strictBoolean(request.body.po2_status)),
+  );
   response.send(request.body);    // echo the result back
 });
 
 app.post('/alarm', function(request, response){
   console.log("Received- Alarm event notification received: ");
-  console.log("trigger: " + request.body.trigger);
-  io.sockets.emit("alarm_event", request.body.trigger);
+  console.log("alarm_type: " + request.body.alarm_type);
+  io.sockets.emit("alarm_event", request.body.alarm_type);
   response.send(request.body);    // echo the result back
 });
 

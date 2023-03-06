@@ -10,6 +10,7 @@
     <script defer src="video_manager.js"></script>
     <script defer src="alarm_manager.js"></script>
     <script defer src="wifi_manager.js"></script>
+    <script defer src="alimelo_manager.js"></script>
     <script defer src="use_situations_manager.js"></script>
     <script defer src="header.js"></script>    
     <script src="/socket.io/socket.io.js"></script>
@@ -53,7 +54,12 @@
                                 <span id="icon-presence">
                                     <i class="fa-solid fa-person-circle-exclamation"></i>                            
                                 </span>                 
-                            </div>                   
+                            </div>        
+                            <div class="column column-icon column-icon-alert-power">
+                                <span id="icon-low-power">
+                                    <i class="fa-solid fa-battery-empty"></i>                            
+                                </span>                 
+                            </div>           
                         </div>
                     </div>
                 </div>         
@@ -110,7 +116,138 @@
                             </label>
                         </div>                        
                     </div>                         
-                </div>                
+                </div>    
+                <div id="overlapped_alimelo" class="alimelo-container">
+                    <p class="alimelo-info-header">Alimelo Status</p>  
+                    <div>
+                        <div class="column">                           
+                            <div>
+                                <div class="column">
+                                    <p class="alimelo-info-key">Bus voltage:</p>
+                                </div>
+                                <div class="column">
+                                    <p id ="alimelo-busvoltage" class="alimelo-info-value"></p>
+                                </div>  
+                            </div>
+                            <div>
+                                <div class="column">
+                                    <p class="alimelo-info-key">Shunt Voltage:</p>
+                                </div>
+                                <div class="column">
+                                    <p id ="alimelo-shuntvoltage" class="alimelo-info-value"></p>
+                                </div>                                                                
+                            </div>   
+                            <div>
+                                <div class="column">
+                                    <p class="alimelo-info-key">Load voltage:</p>
+                                </div>
+                                <div class="column">
+                                    <p id ="alimelo-loadvoltage" class="alimelo-info-value"></p>
+                                </div>                                                                
+                            </div>  
+                            <div>
+                                <div class="column">
+                                    <p class="alimelo-info-key">Current supplied:</p>
+                                </div>
+                                <div class="column">
+                                    <p id ="alimelo-current" class="alimelo-info-value"></p>
+                                </div>                                                                
+                            </div>  
+                            <div>
+                                <div class="column">
+                                    <p class="alimelo-info-key">Power supplied:</p>
+                                </div>
+                                <div class="column">
+                                    <p id ="alimelo-power" class="alimelo-info-value"></p>
+                                </div>                                                                
+                            </div>
+                        </div> 
+                        <div class="column">                            
+                            <div>
+                                <div class="column">
+                                    <p class="alimelo-info-key">Battery level:</p>
+                                </div>
+                                <div class="column">
+                                    <p id ="alimelo-battery" class="alimelo-info-value"></p>
+                                </div>                                                                
+                            </div>  
+                            <div>
+                                <div class="column">
+                                    <p class="alimelo-info-key">Socket supplied:</p>
+                                </div>
+                                <div class="column">
+                                    <p id ="alimelo-electricsocket" class="alimelo-info-value"></p>
+                                </div>                                                                
+                            </div>  
+                            <div>
+                                <div class="column">
+                                    <p class="alimelo-info-key">Powered by battery:</p>
+                                </div>
+                                <div class="column">
+                                    <p id ="alimelo-poweredbybattery" class="alimelo-info-value"></p>
+                                </div>                                                                
+                            </div>  
+                            <div>
+                                <div class="column">
+                                    <p class="alimelo-info-key">Charging battery:</p>
+                                </div>
+                                <div class="column">
+                                    <p id ="alimelo-charging" class="alimelo-info-value"></p>
+                                </div>                                                                
+                            </div>                                            
+                        </div>   
+                    </div>
+                    <div>
+                        <div>
+                            <div class="column">
+                                <p id ="power-outlet-1" class="relay-info">Outlet 1</p>
+                            </div>
+                            <div class="column">
+                                <label class="switch">
+                                    <input type="checkbox" id="toogle-power-outlet-1">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>   
+                            <div class="column">
+                                <span id="spinner-power-outlet-1">
+                                    <i class="fa-solid fa-spinner spinner"></i>
+                                </span> 
+                            </div>                                            
+                        </div>
+                        <div>
+                            <div class="column">
+                                <p id ="power-outlet-2" class="relay-info">Outlet 2</p>
+                            </div>
+                            <div class="column">
+                                <label class="switch">
+                                    <input type="checkbox" id="toogle-power-outlet-2">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>   
+                            <div class="column">
+                                <span id="spinner-power-outlet-2">
+                                    <i class="fa-solid fa-spinner spinner"></i>
+                                </span> 
+                            </div>                                            
+                        </div>      
+                        <div>
+                            <div class="column">
+                                <p id ="power-outlet-3" class="relay-info">Outlet 3</p>
+                            </div>
+                            <div class="column">
+                                <label class="switch">
+                                    <input type="checkbox" id="toogle-power-outlet-3">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>   
+                            <div class="column">
+                                <span id="spinner-power-outlet-3">
+                                    <i class="fa-solid fa-spinner spinner"></i>
+                                </span> 
+                            </div>                                            
+                        </div>      
+                    </div>
+                </div>   
             </div> 
         </div>
         <div id="use-situations-group" class="column center column-center">

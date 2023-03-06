@@ -54,6 +54,9 @@ iframe{
 .column-icon-alert{
     color: yellow;
 }
+.column-icon-alert-power{
+    color: red;
+}
 .column-icon-video{
     color: orangered;
 }
@@ -77,6 +80,30 @@ iframe{
     color: white;
     margin: 5px;
 }
+.relay-info {
+    font-size:1em;
+    color: white;
+    margin: 2px;
+}
+.alimelo-info-header {
+    font-size:2em;
+    color: orangered;
+    margin: 15px;
+    margin-bottom: 28px;
+    text-align: center;
+}
+.alimelo-info-key {
+    font-size:1.2em;
+    color: white;
+    margin: 8px;
+    margin-left: 20px;
+}
+.alimelo-info-value {
+    font-size:1em;
+    color: orangered;
+    margin: 2px;
+    margin-top: 10px;
+}
 .spinner {
     font-size:1.8em;
     color: orangered;
@@ -97,6 +124,12 @@ iframe{
     z-index: 1;
 }
 
+#overlapped_alimelo {
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    z-index: 1;
+}
 /*Switchs style*/
 .switch {
     position: relative;
@@ -142,6 +175,11 @@ input:checked + .slider:before {
 
   /*Info container*/
 .wifi-container {
+    display: flex;
+    flex-direction: column;    
+    visibility: hidden;
+}
+.alimelo-container {
     display: flex;
     flex-direction: column;    
     visibility: hidden;
