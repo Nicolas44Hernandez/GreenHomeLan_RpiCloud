@@ -8,8 +8,7 @@ const pointRadiusRTT = 4;
 const on_threshold = 100;
 const off_threshold = 50
 var bandStatusYLabels = { 0: 'OFF', 1: 'ON' };
-// TODO: update
-const base_service_status_url = 'http://192.168.1.19:5000/smart_band';
+const base_service_status_url = 'http://192.168.1.20:5000/smart_band';
 
 /* Slider Info section  */
 toogle_service_status = document.getElementById("toogle-service");
