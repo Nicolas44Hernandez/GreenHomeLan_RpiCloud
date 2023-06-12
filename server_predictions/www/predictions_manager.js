@@ -1,25 +1,30 @@
 /* Constants */
 const socket_predictions = io();
 const max_chart_len = 120;
-const borderWidth=2;
-const pointRadius=2;
-const pointRadiusBand=0.5;
-const pointRadiusRTT=4;
-const on_threshold=100;
-const off_threshold=50
-var bandStatusYLabels = {0 : 'OFF', 1 : 'ON'};
+const borderWidth = 2;
+const pointRadius = 2;
+const pointRadiusBand = 0.5;
+const pointRadiusRTT = 4;
+const on_threshold = 100;
+const off_threshold = 50
+var bandStatusYLabels = { 0: 'OFF', 1: 'ON' };
+// TODO: update
+const base_service_status_url = 'http://192.168.1.19:5000/smart_band';
+
+/* Slider Info section  */
+toogle_service_status = document.getElementById("toogle-service");
+toogle_service_status.checked = false;
+
 // Get the canvas elements
 const canvasStationsTraffic = document.getElementById('stationsTrafficChart');
 const canvasLiveBoxTraffic = document.getElementById('liveBoxTrafficChart');
 const canvasStationsRttChart = document.getElementById('stationsRttChart');
 const canvasBandStatusChart = document.getElementById('bandStatusChart');
-
-
+// set visible
 canvasStationsTraffic.style.visibility = "visible";
 canvasLiveBoxTraffic.style.visibility = "visible";
 canvasStationsRttChart.style.visibility = "visible";
 canvasBandStatusChart.style.visibility = "visible";
-
 
 // Create the chart
 const ctxStationsTraffic = canvasStationsTraffic.getContext('2d');
@@ -27,19 +32,18 @@ const ctxLiveBoxTraffic = canvasLiveBoxTraffic.getContext('2d');
 const ctxStationsRttChart = canvasStationsRttChart.getContext('2d');
 const ctxBandStatusChart = canvasBandStatusChart.getContext('2d');
 
-
 // Variables
 var default_traffic_data_st1 = [{ x: 0, y: 0 }];
 var default_traffic_data_st2 = [{ x: 0, y: 0 }];
 var default_traffic_data_lb = [{ x: 0, y: 0 }];
 var default_traffic_data_2GHz = [{ x: 0, y: 0 }];
 var default_traffic_data_5GHz = [{ x: 0, y: 0 }];
-var default_rtt_data_st1= [{ x: 0, y: 0 }];
-var default_mean_rtt_data_st1= [{ x: 0, y: 0 }];
-var default_mean_rtt_data_st2= [{ x: 0, y: 0 }];
-var default_rtt_data_st2= [{ x: 0, y: 0 }];
-var default_band_2ghz_state_data= [{ x: 0, y: 0 }];
-var default_band_5ghz_state_data= [{ x: 0, y: 0}];
+var default_rtt_data_st1 = [{ x: 0, y: 0 }];
+var default_mean_rtt_data_st1 = [{ x: 0, y: 0 }];
+var default_mean_rtt_data_st2 = [{ x: 0, y: 0 }];
+var default_rtt_data_st2 = [{ x: 0, y: 0 }];
+var default_band_2ghz_state_data = [{ x: 0, y: 0 }];
+var default_band_5ghz_state_data = [{ x: 0, y: 0 }];
 var iteration_counter = 0;
 var current_band_state = false;
 
@@ -54,7 +58,7 @@ const stationsChart = new Chart(ctxStationsTraffic, {
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
       borderColor: 'rgba(75, 192, 192, 1)',
       pointRadius: 2,
-      borderWidth:borderWidth,
+      borderWidth: borderWidth,
       fill: false
     },
     {
@@ -64,7 +68,7 @@ const stationsChart = new Chart(ctxStationsTraffic, {
       backgroundColor: 'rgba(255, 99, 132, 0.2)',
       borderColor: 'rgba(255, 99, 132, 1)',
       pointRadius: 2,
-      borderWidth:borderWidth,      
+      borderWidth: borderWidth,
       fill: false
     }]
   },
@@ -84,7 +88,7 @@ const stationsChart = new Chart(ctxStationsTraffic, {
           drawOnChartArea: true,
           drawTicks: true,
           color: 'gray',
-        }       
+        }
       },
       y: {
         type: 'linear',
@@ -110,7 +114,7 @@ const liveBoxChart = new Chart(ctxLiveBoxTraffic, {
       data: default_traffic_data_lb,
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
       borderColor: 'orange',
-      borderWidth:borderWidth,
+      borderWidth: borderWidth,
       pointRadius: pointRadius,
       fill: false
     },
@@ -121,7 +125,7 @@ const liveBoxChart = new Chart(ctxLiveBoxTraffic, {
       data: default_traffic_data_2GHz,
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
       borderColor: 'green',
-      borderWidth:borderWidth,
+      borderWidth: borderWidth,
       pointRadius: pointRadius,
       fill: false
     },
@@ -132,7 +136,7 @@ const liveBoxChart = new Chart(ctxLiveBoxTraffic, {
       data: default_traffic_data_5GHz,
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
       borderColor: 'blue',
-      borderWidth:borderWidth,
+      borderWidth: borderWidth,
       pointRadius: pointRadius,
       fill: false
     }]
@@ -181,9 +185,9 @@ const rttStationsChart = new Chart(ctxStationsRttChart, {
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
       borderColor: 'rgba(75, 192, 192, 1)',
       pointRadius: pointRadiusRTT,
-      borderWidth:borderWidth,
+      borderWidth: borderWidth,
       fill: false
-    },    
+    },
     {
       label: 'ST2',
       type: 'line',
@@ -192,7 +196,7 @@ const rttStationsChart = new Chart(ctxStationsRttChart, {
       backgroundColor: 'rgba(255, 99, 132, 0.2)',
       borderColor: 'rgba(255, 99, 132, 1)',
       pointRadius: pointRadiusRTT,
-      borderWidth:borderWidth,
+      borderWidth: borderWidth,
       fill: false
     },
     {
@@ -204,7 +208,7 @@ const rttStationsChart = new Chart(ctxStationsRttChart, {
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
       borderColor: 'rgba(75, 192, 192, 1)',
       pointRadius: pointRadiusBand,
-      borderWidth:borderWidth,
+      borderWidth: borderWidth,
       fill: false
     },
     {
@@ -216,10 +220,10 @@ const rttStationsChart = new Chart(ctxStationsRttChart, {
       backgroundColor: 'rgba(255, 99, 132, 0.2)',
       borderColor: 'rgba(255, 99, 132, 1)',
       pointRadius: pointRadiusBand,
-      borderWidth:borderWidth,
+      borderWidth: borderWidth,
       fill: false
     },
-  ]
+    ]
   },
   options: {
     responsive: true,
@@ -248,50 +252,50 @@ const rttStationsChart = new Chart(ctxStationsRttChart, {
         ticks: {
           // forces step size to be 50 units
           stepSize: 25
-        },       
+        },
         title: {
           display: true,
-          text: 'Predicted RTT (ms)'          
+          text: 'Predicted RTT (ms)'
         },
         grid: {
-          color: function(context){ 
-            if(current_band_state){
-              if (context.tick.value == off_threshold){
+          color: function (context) {
+            if (current_band_state) {
+              if (context.tick.value == off_threshold) {
                 return 'red';
               }
-              else{
+              else {
                 return 'gray'
               }
             }
-            else{
-              if(context.tick.value == on_threshold){
+            else {
+              if (context.tick.value == on_threshold) {
                 return 'green';
               }
-              else{
+              else {
                 return 'gray'
               }
-            }    
+            }
           },
-          lineWidth: function(context){ 
-            if(current_band_state){
-              if (context.tick.value == off_threshold){
+          lineWidth: function (context) {
+            if (current_band_state) {
+              if (context.tick.value == off_threshold) {
                 return 3;
               }
-              else{
+              else {
                 return 1;
               }
             }
-            else{
-              if(context.tick.value == on_threshold){
+            else {
+              if (context.tick.value == on_threshold) {
                 return 3;
               }
-              else{
+              else {
                 return 1;
               }
-            }    
+            }
           },
         },
-      }, 
+      },
     },
     annotation: {
       annotations: [
@@ -320,8 +324,8 @@ const bandStateChart = new Chart(ctxBandStatusChart, {
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
       borderColor: 'blue',
       pointRadius: pointRadiusBand,
-      lineWidth:0.5,
-      borderWidth:borderWidth,
+      lineWidth: 0.5,
+      borderWidth: borderWidth,
       fill: false
     }]
   },
@@ -342,7 +346,7 @@ const bandStateChart = new Chart(ctxBandStatusChart, {
       },
       y: {
         position: 'left',
-        beginAtZero: true,      
+        beginAtZero: true,
         title: {
           display: true,
           text: 'Status'
@@ -351,17 +355,17 @@ const bandStateChart = new Chart(ctxBandStatusChart, {
           display: false,
         },
         ticks: {
-          callback: function(value, index, values) {
-                  return bandStatusYLabels[value];
-              }
+          callback: function (value, index, values) {
+            return bandStatusYLabels[value];
+          }
         }
-      },      
+      },
     }
   }
 });
 
-function append_rtt_data(rtt_prediction_data){
-  if(iteration_counter == max_chart_len){
+function append_rtt_data(rtt_prediction_data) {
+  if (iteration_counter == max_chart_len) {
     stationsChart.data.datasets[0].data.splice(0, 1)
     stationsChart.data.datasets[1].data.splice(0, 1)
     liveBoxChart.data.datasets[0].data.splice(0, 1)
@@ -388,16 +392,16 @@ function append_rtt_data(rtt_prediction_data){
     new_band_status = []
 
     for (var i = 0; i < max_chart_len; i++) {
-      new_st1_traffic.push({ x: i, y: stationsChart.data.datasets[0].data[i].y});
-      new_st2_traffic.push({ x: i, y: stationsChart.data.datasets[1].data[i].y});
-      new_lb_traffic.push({ x: i, y: liveBoxChart.data.datasets[0].data[i].y});
-      new_2GHz_traffic.push({ x: i, y: liveBoxChart.data.datasets[1].data[i].y});
-      new_5GHz_traffic.push({ x: i, y: liveBoxChart.data.datasets[2].data[i].y});
-      new_st1_rtt.push({ x: i, y: rttStationsChart.data.datasets[0].data[i].y});
-      new_st2_rtt.push({ x: i, y: rttStationsChart.data.datasets[1].data[i].y});
-      new_st1_mean_rtt.push({ x: i, y: rttStationsChart.data.datasets[2].data[i].y});
-      new_st2_mean_rtt.push({ x: i, y: rttStationsChart.data.datasets[3].data[i].y});
-      new_band_status.push({ x: i, y: bandStateChart.data.datasets[0].data[i].y}); 
+      new_st1_traffic.push({ x: i, y: stationsChart.data.datasets[0].data[i].y });
+      new_st2_traffic.push({ x: i, y: stationsChart.data.datasets[1].data[i].y });
+      new_lb_traffic.push({ x: i, y: liveBoxChart.data.datasets[0].data[i].y });
+      new_2GHz_traffic.push({ x: i, y: liveBoxChart.data.datasets[1].data[i].y });
+      new_5GHz_traffic.push({ x: i, y: liveBoxChart.data.datasets[2].data[i].y });
+      new_st1_rtt.push({ x: i, y: rttStationsChart.data.datasets[0].data[i].y });
+      new_st2_rtt.push({ x: i, y: rttStationsChart.data.datasets[1].data[i].y });
+      new_st1_mean_rtt.push({ x: i, y: rttStationsChart.data.datasets[2].data[i].y });
+      new_st2_mean_rtt.push({ x: i, y: rttStationsChart.data.datasets[3].data[i].y });
+      new_band_status.push({ x: i, y: bandStateChart.data.datasets[0].data[i].y });
     }
 
     // console.log("New arrays creation OK");
@@ -414,12 +418,12 @@ function append_rtt_data(rtt_prediction_data){
     rttStationsChart.data.datasets[4].data = new_st2_mean_rtt;
     bandStateChart.data.datasets[0].data = new_band_status;
   }
-  else{
+  else {
     iteration_counter = iteration_counter + 1;
   }
 
   console.log("iteartion_counter: " + iteration_counter);
-  
+
   // console.log("livebox_traffic: " + rtt_prediction_data.livebox_traffic);
   // console.log("station_1_traffic: " + rtt_prediction_data.st1_traffic);
   // console.log("station_2_traffic: " + rtt_prediction_data.st2_traffic);  
@@ -432,65 +436,112 @@ function append_rtt_data(rtt_prediction_data){
   // console.log("5GHz status: " + rtt_prediction_data.band_5ghz_status);
 
   // Append station 1 traffic data
-  stationsChart.data.datasets[0].data.push({ x: iteration_counter, y: rtt_prediction_data.st1_traffic});
+  stationsChart.data.datasets[0].data.push({ x: iteration_counter, y: rtt_prediction_data.st1_traffic });
   //console.log("current traffic data station_1: " + JSON.stringify(stationsChart.data.datasets[0].data)); 
 
   // Append station 2 traffic data   
-  stationsChart.data.datasets[1].data.push({ x: iteration_counter, y: rtt_prediction_data.st2_traffic});
+  stationsChart.data.datasets[1].data.push({ x: iteration_counter, y: rtt_prediction_data.st2_traffic });
   //console.log("current traffic data station_2: " + JSON.stringify(stationsChart.data.datasets[1].data)); 
 
   // Append livebox traffic data
-  liveBoxChart.data.datasets[0].data.push({ x: iteration_counter, y: rtt_prediction_data.livebox_traffic});
+  liveBoxChart.data.datasets[0].data.push({ x: iteration_counter, y: rtt_prediction_data.livebox_traffic });
   //console.log("current traffic data livebox: " + JSON.stringify(liveBoxChart.data.datasets[0].data)); 
 
   // Append 2.4GHz traffic data
-  liveBoxChart.data.datasets[1].data.push({ x: iteration_counter, y: rtt_prediction_data.traffic_2GHz});
+  liveBoxChart.data.datasets[1].data.push({ x: iteration_counter, y: rtt_prediction_data.traffic_2GHz });
   //console.log("current 2.4 GHz traffic data: " + JSON.stringify(liveBoxChart.data.datasets[1].data)); 
 
   // Append 5GHz traffic data
-  liveBoxChart.data.datasets[2].data.push({ x: iteration_counter, y: rtt_prediction_data.traffic_5GHz});
+  liveBoxChart.data.datasets[2].data.push({ x: iteration_counter, y: rtt_prediction_data.traffic_5GHz });
   //console.log("current 5 GHz traffic data: " + JSON.stringify(liveBoxChart.data.datasets[2].data)); 
 
   // Append station 1 rtt data
-  rttStationsChart.data.datasets[0].data.push({ x: iteration_counter, y: rtt_prediction_data.st1_rtt});
+  rttStationsChart.data.datasets[0].data.push({ x: iteration_counter, y: rtt_prediction_data.st1_rtt });
   //console.log("current rtt data station_1: " + JSON.stringify(rttStationsChart.data.datasets[0].data)); 
 
   // Append station 2 rtt data
-  rttStationsChart.data.datasets[1].data.push({ x: iteration_counter, y: rtt_prediction_data.st2_rtt});
+  rttStationsChart.data.datasets[1].data.push({ x: iteration_counter, y: rtt_prediction_data.st2_rtt });
   //console.log("current rtt data station_2: " + JSON.stringify(rttStationsChart.data.datasets[1].data)); 
-  
+
   // Append station 1 mean rtt data
-  rttStationsChart.data.datasets[2].data.push({ x: iteration_counter, y: rtt_prediction_data.st1_mean_rtt});
+  rttStationsChart.data.datasets[2].data.push({ x: iteration_counter, y: rtt_prediction_data.st1_mean_rtt });
   //console.log("current mean rtt data station_1: " + JSON.stringify(rttStationsChart.data.datasets[2].data)); 
 
   // Append station 2 mean rtt data
-  rttStationsChart.data.datasets[3].data.push({ x: iteration_counter, y: rtt_prediction_data.st2_mean_rtt});
+  rttStationsChart.data.datasets[3].data.push({ x: iteration_counter, y: rtt_prediction_data.st2_mean_rtt });
   //console.log("current mean rtt data station_2: " + JSON.stringify(rttStationsChart.data.datasets[3].data)); 
 
   // Append  5GHz band status data
-  bandStateChart.data.datasets[0].data.push({ x: iteration_counter, y: rtt_prediction_data.band_5ghz_status});
-  if(rtt_prediction_data.band_5ghz_status == 1){
+  bandStateChart.data.datasets[0].data.push({ x: iteration_counter, y: rtt_prediction_data.band_5ghz_status });
+  if (rtt_prediction_data.band_5ghz_status == 1) {
     current_band_state = true;
   }
-  else{
+  else {
     current_band_state = false;
   }
   //console.log("current 5GHz band status data: " + JSON.stringify(bandStateChart.data.datasets[0].data)); 
 
   // update charts
-  stationsChart.update(); 
-  liveBoxChart.update();  
-  rttStationsChart.update();  
+  stationsChart.update();
+  liveBoxChart.update();
+  rttStationsChart.update();
   bandStateChart.update();
 }
 
-socket_predictions.on("traffic_notification", (traffic_data) => { 
-  console.log("RECEIVED TRAFFIC NOTIFICATION: "+ traffic_data)
-  append_traffic_data(traffic_data);     
+/* Service state toogle on event functions  */
+function set_toogles_on_event() {
+  toogle_service_status.addEventListener("change", function () {
+    console.log("Set service status: " + this.checked);
+    set_service_status(this.checked);
+  });
+}
+set_toogles_on_event();
+
+
+function set_service_status(new_status) {
+  // query params
+  const params = { status: new_status };
+  // convert the object to a query string
+  const queryString = Object.entries(params)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .join('&');
+  // construct the final URL with the query string
+  const url = `${base_service_status_url}?${queryString}`;
+  console.log("url: " + url);
+
+  // send the request and wait for the response
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", url);
+  xhr.setRequestHeader("Accept", "*/*");
+  xhr.send(null);
+
+  xhr.onload = function () {
+    const response_json = JSON.parse(xhr.responseText);
+    const received_new_status = response_json.status;
+    if (xhr.status === 200 && received_new_status == new_status) {
+      toogle_service_status.checked = new_status;
+    } else {
+      toogle_service_status.checked = !new_status;
+      console.error("Error:", xhr.statusText);
+    }
+  };
+  xhr.onerror = function () {
+    console.error("Network error");
+    toogle_service_status.checked = !new_status;  };
+}
+
+socket_predictions.on("traffic_notification", (traffic_data) => {
+  console.log("RECEIVED TRAFFIC NOTIFICATION: " + traffic_data)
+  append_traffic_data(traffic_data);
 });
 
-socket_predictions.on("rtt_prediction_notification", (rtt_prediction_data) => { 
-  console.log("RECEIVED RTT PREDICTION NOTIFICATION: "+ rtt_prediction_data)
-  append_rtt_data(rtt_prediction_data);     
+socket_predictions.on("rtt_prediction_notification", (rtt_prediction_data) => {
+  console.log("RECEIVED RTT PREDICTION NOTIFICATION: " + rtt_prediction_data)
+  append_rtt_data(rtt_prediction_data);
+});
+
+socket_predictions.on("rtt_prediction_service_status", (service_status) => {
+  console.log("RECEIVED PREDICTION SERVICE STATUS: " + service_status);
+  toogle_service_status.checked = service_status; 
 });
 

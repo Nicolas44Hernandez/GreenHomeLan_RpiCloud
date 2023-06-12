@@ -39,6 +39,18 @@ app.post('/rtt_prediction', function(request, response){
   response.send(request.body);    // echo the result back
 });
 
+app.post('/rtt_prediction_service', function(request, response){
+  console.log('Received predictionservice status');
+  console.log(request.body);
+  var service_status_data = {
+    rtt_prediction_service_status: Boolean(strictBoolean(request.body.status)), 
+  } 
+  console.log(service_status_data);
+  io.sockets.emit("rtt_prediction_service_status", service_status_data.rtt_prediction_service_status);  
+  response.send(request.body);    // echo the result back
+});
+
+
 io.on("connection", (socket) => {
   console.log('Connection socket on client web with id : ' + socket.id); 
 });
