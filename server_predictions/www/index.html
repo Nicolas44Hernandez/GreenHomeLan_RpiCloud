@@ -18,23 +18,22 @@
         <input type="checkbox" id="toogle-service">
         <span class="slider"></span>
     </label>
-    
     <div class="predictions-container">        
-        <div class="column">
+        <div class="column">            
+            <div class="row">
+                <canvas id="bandStatusChart"></canvas>                
+            </div>   
             <div class="row">
                 <canvas id="liveBoxTrafficChart"></canvas> 
-            </div> 
-            <div class="row">
-                <canvas id="stationsTrafficChart"></canvas>
-            </div>                 
+            </div>               
         </div>
-        <div class="column">
+        <div class="column">            
             <div class="row">
-                <canvas id="stationsRttChart"></canvas>
-            </div>
+                <canvas id="stationsRttChart"></canvas>                
+            </div>      
             <div class="row">
-                <canvas id="bandStatusChart"></canvas> 
-            </div>           
+                <canvas id="stationsTrafficChart"></canvas>                
+            </div>     
         </div>
     </div>
 </body>

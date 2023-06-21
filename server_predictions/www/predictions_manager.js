@@ -5,10 +5,11 @@ const borderWidth = 2;
 const pointRadius = 2;
 const pointRadiusBand = 0.5;
 const pointRadiusRTT = 4;
-const on_threshold = 100;
+const on_threshold = 50;
 const off_threshold = 50
 var bandStatusYLabels = { 0: 'OFF', 1: 'ON' };
-const base_service_status_url = 'http://192.168.1.20:5000/smart_band';
+const base_service_status_url = 'http://192.168.1.20:5000/smart_band'; // RPI box
+//const base_service_status_url = 'http://192.168.1.19:5000/smart_band'; //virtual machine
 
 /* Slider Info section  */
 toogle_service_status = document.getElementById("toogle-service");
@@ -258,22 +259,12 @@ const rttStationsChart = new Chart(ctxStationsRttChart, {
         },
         grid: {
           color: function (context) {
-            if (current_band_state) {
-              if (context.tick.value == off_threshold) {
-                return 'red';
-              }
-              else {
-                return 'gray'
-              }
-            }
-            else {
-              if (context.tick.value == on_threshold) {
-                return 'green';
-              }
-              else {
-                return 'gray'
-              }
-            }
+            if (context.tick.value == on_threshold) {
+                  return 'red';
+                }
+                else {
+                  return 'gray'
+                }
           },
           lineWidth: function (context) {
             if (current_band_state) {
