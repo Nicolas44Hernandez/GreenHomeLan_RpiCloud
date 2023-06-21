@@ -1,5 +1,5 @@
 /* Constants */
-const url_camera = "http://camerawigreeninnov.ddns.net:2000/video_stream"
+const url_camera = "http://192.168.1.20:2000/video_stream"
 const default_image = "imgs/default.jpg"
 
 /* Elements */

@@ -1,6 +1,6 @@
 /* Constants */
 const socket_use_situation = io();
-const base_use_situations_url = "http://camerawigreeninnov.ddns.net:5000/use_situations"
+const base_use_situations_url = "http://192.168.1.20:5000/use_situations"
 
 /* Use situations buttons */
 use_situation_presence_day_button = document.getElementById('us-button-presence-day'); 
