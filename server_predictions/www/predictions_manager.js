@@ -10,8 +10,8 @@ const off_threshold = 50;
 const on_baseline_threshold = 2;
 const off_baseline_threshold = 1
 var bandStatusYLabels = { 0: 'OFF', 1: 'ON' };
-const base_service_status_url = 'http://192.168.1.20:5000/smart_band'; // RPI box
-//const base_service_status_url = 'http://192.168.1.19:5000/smart_band'; //virtual machine
+//const base_service_status_url = 'http://192.168.1.20:5000/smart_band'; // RPI box
+const base_service_status_url = 'http://192.168.1.19:5000/smart_band'; //virtual machine
 
 /* Slider Info section  */
 toogle_service_status = document.getElementById("toogle-service");
