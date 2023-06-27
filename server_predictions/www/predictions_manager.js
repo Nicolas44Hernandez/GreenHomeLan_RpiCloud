@@ -1,15 +1,17 @@
 /* Constants */
 const socket_predictions = io();
-const max_chart_len = 120;
+const max_chart_len = 150;
 const borderWidth = 2;
 const pointRadius = 2;
 const pointRadiusBand = 0.5;
 const pointRadiusRTT = 4;
 const on_threshold = 50;
-const off_threshold = 50
+const off_threshold = 50;
+const on_baseline_threshold = 2;
+const off_baseline_threshold = 1
 var bandStatusYLabels = { 0: 'OFF', 1: 'ON' };
-const base_service_status_url = 'http://192.168.1.20:5000/smart_band'; // RPI box
-//const base_service_status_url = 'http://192.168.1.19:5000/smart_band'; //virtual machine
+//const base_service_status_url = 'http://192.168.1.20:5000/smart_band'; // RPI box
+const base_service_status_url = 'http://192.168.1.19:5000/smart_band'; //virtual machine
 
 /* Slider Info section  */
 toogle_service_status = document.getElementById("toogle-service");
@@ -44,8 +46,10 @@ var default_mean_rtt_data_st2 = [{ x: 0, y: 0 }];
 var default_rtt_data_st2 = [{ x: 0, y: 0 }];
 var default_band_2ghz_state_data = [{ x: 0, y: 0 }];
 var default_band_5ghz_state_data = [{ x: 0, y: 0 }];
+var default_band_5ghz_state_data_baseline = [{ x: 0, y: 0 }];
 var iteration_counter = 0;
 var current_band_state = false;
+var baseline_current_band_state = false;
 
 // Charts
 const stationsChart = new Chart(ctxStationsTraffic, {
@@ -248,7 +252,7 @@ const rttStationsChart = new Chart(ctxStationsRttChart, {
         position: 'left',
         beginAtZero: true,
         min: 0,
-        max: 200,
+        max: 150,
         ticks: {
           // forces step size to be 50 units
           stepSize: 25
@@ -317,6 +321,18 @@ const bandStateChart = new Chart(ctxBandStatusChart, {
       lineWidth: 0.5,
       borderWidth: borderWidth,
       fill: false
+    },
+    {
+      label: 'baseline',
+      stepped: true,
+      type: 'line',
+      data: default_band_5ghz_state_data_baseline,
+      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      borderColor: 'red',
+      pointRadius: pointRadiusBand,
+      lineWidth: 0.5,
+      borderWidth: borderWidth,
+      fill: false
     }]
   },
   options: {
@@ -354,6 +370,26 @@ const bandStateChart = new Chart(ctxBandStatusChart, {
   }
 });
 
+function get_basline_band_status(total_traffic) {
+  console.log(total_traffic);
+  if (baseline_current_band_state){
+    if(total_traffic >= off_baseline_threshold){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+  if (!baseline_current_band_state){
+    if(total_traffic > on_baseline_threshold){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+}
+
 function append_rtt_data(rtt_prediction_data) {
   if (iteration_counter == max_chart_len) {
     stationsChart.data.datasets[0].data.splice(0, 1)
@@ -366,13 +402,14 @@ function append_rtt_data(rtt_prediction_data) {
     rttStationsChart.data.datasets[2].data.splice(0, 1)
     rttStationsChart.data.datasets[3].data.splice(0, 1)
     bandStateChart.data.datasets[0].data.splice(0, 1)
+    bandStateChart.data.datasets[1].data.splice(0, 1)
 
     console.log("Splice OK");
 
     // new arrays 
     new_st1_traffic = []
     new_st2_traffic = []
-    new_lb_traffic = []
+    new_lb_traffic = []    
     new_2GHz_traffic = []
     new_5GHz_traffic = []
     new_st1_rtt = []
@@ -380,6 +417,7 @@ function append_rtt_data(rtt_prediction_data) {
     new_st1_mean_rtt = []
     new_st2_mean_rtt = []
     new_band_status = []
+    new_baseline_band_status=[]
 
     for (var i = 0; i < max_chart_len; i++) {
       new_st1_traffic.push({ x: i, y: stationsChart.data.datasets[0].data[i].y });
@@ -392,6 +430,7 @@ function append_rtt_data(rtt_prediction_data) {
       new_st1_mean_rtt.push({ x: i, y: rttStationsChart.data.datasets[2].data[i].y });
       new_st2_mean_rtt.push({ x: i, y: rttStationsChart.data.datasets[3].data[i].y });
       new_band_status.push({ x: i, y: bandStateChart.data.datasets[0].data[i].y });
+      new_baseline_band_status.push({ x: i, y: bandStateChart.data.datasets[1].data[i].y });      
     }
 
     // console.log("New arrays creation OK");
@@ -407,6 +446,7 @@ function append_rtt_data(rtt_prediction_data) {
     rttStationsChart.data.datasets[3].data = new_st1_mean_rtt;
     rttStationsChart.data.datasets[4].data = new_st2_mean_rtt;
     bandStateChart.data.datasets[0].data = new_band_status;
+    bandStateChart.data.datasets[1].data = new_baseline_band_status;
   }
   else {
     iteration_counter = iteration_counter + 1;
@@ -470,6 +510,11 @@ function append_rtt_data(rtt_prediction_data) {
     current_band_state = false;
   }
   //console.log("current 5GHz band status data: " + JSON.stringify(bandStateChart.data.datasets[0].data)); 
+
+  //baseline band status 
+  baseline_band_status = get_basline_band_status(rtt_prediction_data.livebox_traffic)
+  bandStateChart.data.datasets[1].data.push({ x: iteration_counter, y: baseline_band_status });
+  baseline_current_band_state=baseline_band_status;
 
   // update charts
   stationsChart.update();
