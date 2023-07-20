@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalDataNetworks Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/all.css">
+    <script defer src="predictions_manager.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <script src="js/all.js"></script>
+    <p class="demo-title">Smart Local Networks Demo</p>
+    <label class="switch">        
+        <input type="checkbox" id="toogle-service">
+        <span class="slider"></span>
+    </label>
+    <div class="predictions-container">        
+        <div class="column">            
+            <div class="row">
+                <canvas id="bandStatusChart"></canvas>                
+            </div>   
+            <div class="row">
+                <canvas id="liveBoxTrafficChart"></canvas> 
+            </div>               
+        </div>
+        <div class="column">            
+            <div class="row">
+                <canvas id="stationsRttChart"></canvas>                
+            </div>      
+            <div class="row">
+                <canvas id="stationsTrafficChart"></canvas>                
+            </div>     
+        </div>
+    </div>
+</body>
+</html>
