@@ -1,5 +1,6 @@
 const socket_alimelo = io();
-const base_electrical_panel_url = 'http://camerawigreeninnov.ddns.net:5000/electrical_panel';
+const base_electrical_panel_url = 'http://192.168.1.17:5000/electrical_panel';
+// const base_electrical_panel_url = 'http://localhost:5000/electrical_panel';
 
 /* Alimelo info section  */
 alimelo_info = document.getElementById('overlapped_alimelo');
