@@ -65,7 +65,7 @@ var interval_icons = window.setInterval(function(){
         }
     }  
     else{
-        emergency_icon.style.visibility = 'hidden';
+        battery_button_icon.style.visibility = 'hidden';
         battery_button_number_icon.style.visibility = 'hidden'
     }
     if(socket_blink){

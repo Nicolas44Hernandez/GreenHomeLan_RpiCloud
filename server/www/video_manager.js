@@ -30,4 +30,5 @@ function hide_image(){
     video_icon.style.color = "gray";
     wifi_info.style.visibility = "hidden";
     alimelo_info.style.visibility = "hidden";
+    connected_objects_info.style.visibility = "hidden";
 }

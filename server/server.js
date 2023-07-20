@@ -76,6 +76,18 @@ app.post('/alarm', function(request, response){
   response.send(request.body);    // echo the result back
 });
 
+app.post('/objects', function(request, response){
+  console.log("Received- Objects status received: ");
+  console.log("device: " + request.body.device);
+  console.log("type: " + request.body.type);
+  console.log("batLevel: " + request.body.batLevel);
+  io.sockets.emit("device_connected", true);
+  if(request.body.type == "button"){
+    io.sockets.emit("button_battery_level", request.body);
+  }
+  response.send(request.body);    // echo the result back
+});
+
 io.on("connection", (socket) => {
   console.log('Connection socket on client web with id : ' + socket.id); 
 });

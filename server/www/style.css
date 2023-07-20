@@ -130,6 +130,12 @@ iframe{
     left: 100px;
     z-index: 1;
 }
+#overlapped_objects {
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    z-index: 1;
+}
 /*Switchs style*/
 .switch {
     position: relative;
@@ -172,7 +178,25 @@ input:checked + .slider:before {
     -ms-transform: translateX(26px);
     transform: translateX(26px);
 }
-
+.objects-info-header {
+    font-size:2em;
+    color: rgb(216, 170, 19);
+    margin: 15px;
+    margin-bottom: 28px;
+    text-align: center;
+}
+.objects-info-value {
+    font-size:2.2em;
+    color: rgb(216, 170, 19);
+    margin: 2px;
+    margin-top: 10px;
+}
+.objects-info-key {
+    font-size:2em;
+    color: white;
+    margin: 8px;
+    margin-left: 20px;
+}
   /*Info container*/
 .wifi-container {
     display: flex;
@@ -180,6 +204,11 @@ input:checked + .slider:before {
     visibility: hidden;
 }
 .alimelo-container {
+    display: flex;
+    flex-direction: column;    
+    visibility: hidden;
+}
+.objects-container {
     display: flex;
     flex-direction: column;    
     visibility: hidden;

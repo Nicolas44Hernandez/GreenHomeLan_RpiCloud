@@ -11,6 +11,7 @@
     <script defer src="alarm_manager.js"></script>
     <script defer src="wifi_manager.js"></script>
     <script defer src="alimelo_manager.js"></script>
+    <script defer src="objects_manager.js"></script>
     <script defer src="use_situations_manager.js"></script>
     <script defer src="header.js"></script>    
     <script src="/socket.io/socket.io.js"></script>
@@ -43,6 +44,11 @@
                             <div class="column column-icon column-icon-video">
                                 <span id="icon-plug">
                                     <i class="fa-solid fa-plug"></i>
+                                </span>                
+                            </div>  
+                            <div class="column column-icon column-icon-video">
+                                <span id="icon-objects">
+                                    <i class="fa-solid fa-clipboard"></i>
                                 </span>                
                             </div>  
                             <div class="column column-icon column-icon-alert">
@@ -261,7 +267,26 @@
                             </div>                                            
                         </div>      
                     </div>
-                </div>   
+                </div>  
+                <div id="overlapped_objects" class="objects-container">
+                    <p class="objects-info-header">Connected Objects</p>  
+                    <div>
+                        <div class="column">
+                            <p class="objects-info-key">Button 1 battery level:</p>
+                        </div>
+                        <div class="column">
+                            <p id ="button1-battery-level" class="objects-info-value"></p>
+                        </div>  
+                    </div>
+                    <div>
+                        <div class="column">
+                            <p class="objects-info-key">Button 2 battery level:</p>
+                        </div>
+                        <div class="column">
+                            <p id ="button2-battery-level" class="objects-info-value"></p>
+                        </div>  
+                    </div>
+                </div>    
             </div> 
         </div>
         <div id="use-situations-group" class="column center column-center">

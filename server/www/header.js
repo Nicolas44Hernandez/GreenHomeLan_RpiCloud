@@ -7,6 +7,7 @@ home_icon = document.getElementById("icon-home");
 wifi_icon = document.getElementById("icon-wifi");
 video_icon = document.getElementById("icon-video");
 plug_icon = document.getElementById("icon-plug");
+objects_icon = document.getElementById("icon-objects");
 alimelo_battery_100_icon = document.getElementById("icon-alimelo-battery-100");
 alimelo_battery_75_icon = document.getElementById("icon-alimelo-battery-75");
 alimelo_battery_50_icon = document.getElementById("icon-alimelo-battery-50");
@@ -23,6 +24,8 @@ video_icon.style.visibility = "visible";
 video_icon.style.color = "gray";
 plug_icon.style.visibility = "visible";
 plug_icon.style.color = "gray";
+objects_icon.style.visibility = "visible";
+objects_icon.style.color = "gray";
 
 // Battery icons
 alimelo_battery_100_icon.style.visibility = "hidden";
@@ -40,6 +43,7 @@ alimelo_battery_0_icon.style.color = "red";
 video_stream_frame = document.getElementById("frame")
 overlay_wifi = document.getElementById('overlapped_wifi');
 overlay_alimelo = document.getElementById('overlapped_alimelo');
+overlay_objects = document.getElementById('overlapped_objects');
 const iframeRect = video_stream_frame.getBoundingClientRect();
 
 // Set wifi overlapped container dimensions
@@ -54,6 +58,12 @@ overlay_alimelo.style.left = iframeRect.left + 'px';
 overlay_alimelo.style.width = iframeRect.width + 'px';
 overlay_alimelo.style.height = iframeRect.height + 'px';
 
+// Set connected objects overlapped container dimensions
+overlay_objects.style.top = iframeRect.top + 'px';
+overlay_objects.style.left = iframeRect.left + 'px';
+overlay_objects.style.width = iframeRect.width + 'px';
+overlay_objects.style.height = iframeRect.height + 'px';
+
 function clear_header_icons(){
     wifi_info.style.visibility = "hidden";
     hide_image();
@@ -61,6 +71,7 @@ function clear_header_icons(){
     video_icon.style.color = "gray";
     wifi_icon.style.color = "gray";
     plug_icon.style.color = "gray";
+    objects_icon.style.comor = "gray";
 }
 
 /* Buttons on click functions  */
@@ -85,6 +96,10 @@ function set_buttons_on_click(){
     plug_icon.onclick = function(){
         hide_image();
         alimelo_info.style.visibility = "visible";
+    }    
+    objects_icon.onclick = function(){
+        hide_image();
+        connected_objects_info.style.visibility = "visible";
     }    
 }
 set_buttons_on_click()
@@ -173,4 +188,12 @@ socket.on("alimelo_battery_level", (battery_level) => {
     }    
 });
 
-
+socket.on("device_connected", (connected) => {     
+    console.log("BUTTON CONNETED: "+ connected);
+    if(connected){
+        objects_icon.style.color = "green";
+    }
+    else{
+        objects_icon.style.color = "red";
+    }
+});
