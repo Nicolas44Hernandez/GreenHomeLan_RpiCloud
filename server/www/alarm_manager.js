@@ -1,8 +1,10 @@
 const socket_alarm = io();
 
 /* Audio notifications */
-doorbell_notification_audio = document.getElementById("doorbell_audio")
-presence_alarm_audio = document.getElementById("presence_alarm_audio")
+doorbell_notification_audio = document.getElementById("doorbell_audio");
+presence_alarm_audio = document.getElementById("presence_alarm_audio");
+button_alarm_audio = document.getElementById("button_alarm_audio");
+battery_alarm_audio = document.getElementById("battery_alarm_audio");
 presence_icon = document.getElementById('icon-presence');
 emergency_icon = document.getElementById('icon-emergency');
 battery_button_icon = document.getElementById('icon-battery');
@@ -112,16 +114,14 @@ socket_alarm.on("alarm_event", (trigger) => {
     } 
     else if(trigger == "emergency_btn"){
         clear_header_icons();
-        // TODO: change audio (?)
-        presence_alarm_audio.play();
+        button_alarm_audio.play();
         emergency_blink = true;
         // Set end of alarm (video stream)
         setTimeout(set_end_of_alarm, 10000);
     } 
     else if(trigger == "battery_btn_1"){
         clear_header_icons();
-        // TODO: change audio (?)
-        presence_alarm_audio.play();
+        battery_alarm_audio.play();
         battery_button_number_icon.classList.remove("fa-2");
         battery_button_number_icon.classList.add("fa-1");
         battery_button_blink = true;        
@@ -130,8 +130,7 @@ socket_alarm.on("alarm_event", (trigger) => {
     } 
     else if(trigger == "battery_btn_2"){
         clear_header_icons();
-        // TODO: change audio
-        presence_alarm_audio.play();
+        battery_alarm_audio.play();
         battery_button_number_icon.classList.remove("fa-1");
         battery_button_number_icon.classList.add("fa-2");
         battery_button_blink = true;
@@ -140,7 +139,7 @@ socket_alarm.on("alarm_event", (trigger) => {
     } 
     else if(trigger == "low_power"){
         // TODO: set sound
-        presence_alarm_audio.play();
+        battery_alarm_audio.play();
         socket_blink = true;
         // Set end of alarm
         setTimeout(set_end_of_alarm, 30000);
