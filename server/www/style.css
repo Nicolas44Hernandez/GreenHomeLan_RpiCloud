@@ -181,20 +181,32 @@ input:checked + .slider:before {
 .objects-info-header {
     font-size:2em;
     color: rgb(216, 170, 19);
-    margin: 15px;
-    margin-bottom: 28px;
+    margin: 10px;
+    text-align: center;
+}
+.objects-functions-header {
+    font-size:1.5em;
+    color: rgb(117 126 229);
+    margin: 8px;
     text-align: center;
 }
 .objects-info-value {
-    font-size:2.2em;
+    font-size:1.5em;
     color: rgb(216, 170, 19);
     margin: 2px;
-    margin-top: 10px;
 }
 .objects-info-key {
-    font-size:2em;
+    font-size:1.6em;
     color: white;
     margin: 8px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 20px;
+}
+.objects-actions-key {
+    font-size:1.5em;
+    color: white;
+    margin: 2px;
     margin-left: 20px;
 }
   /*Info container*/
@@ -212,4 +224,47 @@ input:checked + .slider:before {
     display: flex;
     flex-direction: column;    
     visibility: hidden;
+}
+
+/*Drodown*/
+.dropdown {
+    position: relative;
+    margin-left: 30px;
+  }  
+.dropdown-btn {
+    padding: 1px;
+    width: 310px;
+    background-color: rgb(117 126 229);
+    border: none;
+    cursor: pointer;
+}
+.dropdown-content {
+    display: none;
+    width: 300px;
+    position: relative;
+    background-color: rgb(154 152 144);
+    border: 2px solid #ccc;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.dropdown-content li {
+    padding: 0px;
+    border: 1px solid #ccc;
+}
+.dropdown-content a {
+    text-decoration: none;
+    color: #333;
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.my-button-actions{
+    text-align: center;
+    border: 1px solid white;
+    margin-left: 200px;
+    background-color: green;
+    color: white;
+    width: 100px;
+    cursor: pointer;
 }
