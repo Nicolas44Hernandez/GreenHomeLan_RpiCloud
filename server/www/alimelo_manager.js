@@ -1,5 +1,6 @@
 const socket_alimelo = io();
 // const base_electrical_panel_url = 'http://localhost:5000/electrical_panel';
+//const base_electrical_panel_url = 'http://192.168.1.19:5000/electrical_panel';
 const base_electrical_panel_url = 'http://192.168.1.20:5000/electrical_panel';
 
 /* Alimelo info section  */
