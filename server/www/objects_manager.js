@@ -31,11 +31,18 @@ connected_objects_info.style.visibility = "hidden";
 
 // Connected objects status values
 button1_batery_level = document.getElementById('button1-battery-level');
+button1_last_ka = document.getElementById('button1-last-ka');
 button2_batery_level = document.getElementById('button2-battery-level');
+button2_last_ka = document.getElementById('button2-last-ka');
+cam1_last_ka = document.getElementById('cam1-last-ka');
+
 
 /* Set init values */
 button1_batery_level.textContent = "n/a";
+button1_last_ka.textContent = "----";
 button2_batery_level.textContent = "n/a";
+button2_last_ka.textContent = "---";
+cam1_last_ka.textContent = "---";
 actions_list = [];
 action1 = {"id": -1, "name": ""};
 action2 = {"id": -1, "name": ""};
@@ -355,7 +362,7 @@ function get_action_from_name(actionName){
     });
     return actionToReturn;
 }
-socket_alimelo.on("button_battery_level", (body) => { 
+socket_objects.on("button_battery_level", (body) => { 
     let device = body.device;
     let batLevel = body.batLevel;
     if(batLevel != null){
@@ -369,4 +376,22 @@ socket_alimelo.on("button_battery_level", (body) => {
             button2_batery_level.textContent = batLevel + " %";
         }
     }                  
+});
+
+socket_objects.on("thread_connected_nodes_keep_alive", (body) => { 
+    console.log(body);   
+    for (var node_id in body){
+        console.log("node_id:" + node_id + "  node_last_seen:" + body[node_id]);
+        if(node_id == "1"){
+            button1_last_ka.textContent = body[node_id];
+        }
+        else if(node_id == "2"){
+            button2_last_ka.textContent = body[node_id];
+        }
+        else if(node_id == "cam"){
+            cam1_last_ka.textContent = body[node_id];
+        }
+
+    } 
+    
 });

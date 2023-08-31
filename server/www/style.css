@@ -179,9 +179,9 @@ input:checked + .slider:before {
     transform: translateX(26px);
 }
 .objects-info-header {
-    font-size:2em;
+    font-size:1.5em;
     color: rgb(216, 170, 19);
-    margin: 10px;
+    margin: 8px;
     text-align: center;
 }
 .objects-functions-header {
@@ -191,17 +191,25 @@ input:checked + .slider:before {
     text-align: center;
 }
 .objects-info-value {
-    font-size:1.5em;
+    font-size:1.2em;
     color: rgb(216, 170, 19);
     margin: 2px;
+    margin-right: 15px;
 }
 .objects-info-key {
-    font-size:1.6em;
+    font-size:1.2em;
     color: white;
     margin: 8px;
     margin-top: 2px;
     margin-bottom: 2px;
+}
+.objects-main {
+    font-size:1.4em;
+    color: orangered;
+    margin-top: 0px;
+    margin-bottom: 2px;
     margin-left: 20px;
+    margin-right: 30px;
 }
 .objects-actions-key {
     font-size:1.5em;

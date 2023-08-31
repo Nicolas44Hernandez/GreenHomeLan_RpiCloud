@@ -88,6 +88,11 @@ app.post('/objects', function(request, response){
   response.send(request.body);    // echo the result back
 });
 
+app.post('/thread_nodes', function(request, response){
+  io.sockets.emit("thread_connected_nodes_keep_alive", request.body);  
+  response.send(request.body);    // echo the result back
+});
+
 io.on("connection", (socket) => {
   console.log('Connection socket on client web with id : ' + socket.id); 
 });
