@@ -379,7 +379,12 @@ socket_objects.on("button_battery_level", (body) => {
 });
 
 socket_objects.on("thread_connected_nodes_keep_alive", (body) => { 
-    console.log(body);   
+    console.log(body);       
+    // Clean nodes
+    button1_last_ka.textContent = "----";
+    button2_last_ka.textContent = "----";
+    cam1_last_ka.textContent = "---";
+    // Set nodes last seen
     for (var node_id in body){
         console.log("node_id:" + node_id + "  node_last_seen:" + body[node_id]);
         if(node_id == "1"){
