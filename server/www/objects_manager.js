@@ -30,18 +30,16 @@ actionKey4Text.style.display = "block";
 connected_objects_info.style.visibility = "hidden";
 
 // Connected objects status values
-button1_batery_level = document.getElementById('button1-battery-level');
 button1_last_ka = document.getElementById('button1-last-ka');
-button2_batery_level = document.getElementById('button2-battery-level');
 button2_last_ka = document.getElementById('button2-last-ka');
+buttonsMx_last_ka = document.getElementById('btnMx-last-ka');
 cam1_last_ka = document.getElementById('cam1-last-ka');
 
 
 /* Set init values */
-button1_batery_level.textContent = "n/a";
 button1_last_ka.textContent = "----";
-button2_batery_level.textContent = "n/a";
 button2_last_ka.textContent = "---";
+buttonsMx_last_ka.textContent = "---";
 cam1_last_ka.textContent = "---";
 actions_list = [];
 action1 = {"id": -1, "name": ""};
@@ -369,11 +367,11 @@ socket_objects.on("button_battery_level", (body) => {
         console.log("device:"+ device +"  batLevel:" + batLevel);
         if(device==1){
             console.log("Updatting for device 1")
-            button1_batery_level.textContent = batLevel + " %";
+            //button1_batery_level.textContent = batLevel + " %";
         }
         if(device==2){
             console.log("Updatting for device 2")
-            button2_batery_level.textContent = batLevel + " %";
+            //button2_batery_level.textContent = batLevel + " %";
         }
     }                  
 });
@@ -383,6 +381,7 @@ socket_objects.on("thread_connected_nodes_keep_alive", (body) => {
     // Clean nodes
     button1_last_ka.textContent = "----";
     button2_last_ka.textContent = "----";
+    buttonsMx_last_ka.textContent = "----";
     cam1_last_ka.textContent = "---";
     // Set nodes last seen
     for (var node_id in body){
@@ -393,10 +392,11 @@ socket_objects.on("thread_connected_nodes_keep_alive", (body) => {
         else if(node_id == "2"){
             button2_last_ka.textContent = body[node_id];
         }
-        else if(node_id == "cam"){
+        else if(node_id == "3"){
             cam1_last_ka.textContent = body[node_id];
         }
-
-    } 
-    
+        else if(node_id == "4"){
+            buttonsMx_last_ka.textContent = body[node_id];
+        }
+    }     
 });
