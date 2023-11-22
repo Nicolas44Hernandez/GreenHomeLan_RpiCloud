@@ -22,6 +22,7 @@ function strictBoolean(str) {
 
 app.post('/status', function(request, response){
   console.log('Received orchestrator status');
+  console.log("Orchestrator base url:" + request.body.orquestrator_base_url);
   console.log("Wifi status:" + request.body.wifi_status);
   console.log("Wifi 2.4GHz status:" + request.body.band_2GHz_status);
   console.log("Wifi 5GHz status:" + request.body.band_5GHz_status);  
