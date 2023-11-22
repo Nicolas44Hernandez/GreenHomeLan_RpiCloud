@@ -33,6 +33,7 @@ button1_last_ka = document.getElementById('button1-last-ka');
 button2_last_ka = document.getElementById('button2-last-ka');
 buttonsMx_last_ka = document.getElementById('btnMx-last-ka');
 cam1_last_ka = document.getElementById('cam1-last-ka');
+cam2_last_ka = document.getElementById('cam2-last-ka');
 
 
 /* Set init values */
@@ -40,6 +41,7 @@ button1_last_ka.textContent = "----";
 button2_last_ka.textContent = "---";
 buttonsMx_last_ka.textContent = "---";
 cam1_last_ka.textContent = "---";
+cam2_last_ka.textContent = "---";
 actions_list = [];
 action1 = {"id": -1, "name": ""};
 action2 = {"id": -1, "name": ""};
@@ -382,6 +384,7 @@ socket_objects.on("thread_connected_nodes_keep_alive", (body) => {
     button2_last_ka.textContent = "----";
     buttonsMx_last_ka.textContent = "----";
     cam1_last_ka.textContent = "---";
+    cam2_last_ka.textContent = "---";
     // Set nodes last seen
     for (var node_id in body){
         console.log("node_id:" + node_id + "  node_last_seen:" + body[node_id]);
@@ -390,12 +393,15 @@ socket_objects.on("thread_connected_nodes_keep_alive", (body) => {
         }
         else if(node_id == "2"){
             button2_last_ka.textContent = body[node_id];
-        }
+        }        
         else if(node_id == "3"){
-            cam1_last_ka.textContent = body[node_id];
+            buttonsMx_last_ka.textContent = body[node_id];
         }
         else if(node_id == "4"){
-            buttonsMx_last_ka.textContent = body[node_id];
+            cam1_last_ka.textContent = body[node_id];
+        }
+        else if(node_id == "5"){
+            cam5_last_ka.textContent = body[node_id];
         }
     }     
 });
