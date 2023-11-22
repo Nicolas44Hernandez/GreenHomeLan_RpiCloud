@@ -87,7 +87,7 @@ function set_buttons_on_click(){
     video_icon.onclick = function(){   
         hide_image();         
         if(!video_streaming){
-            start_video_stream();
+            start_video_stream_cam1();
         }
         else{
             stop_video_stream();

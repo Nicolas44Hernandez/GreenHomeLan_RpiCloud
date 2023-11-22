@@ -1,6 +1,5 @@
 const socket_objects = io();
-//const base_commands_url = "http://192.168.1.20:5000/commands"
-const base_commands_url = "http://192.168.1.19:5000/commands"
+const base_commands_url = "http://192.168.1.17:5000/commands"
 
 /* Connected objects info section  */
 connected_objects_info = document.getElementById('overlapped_objects');

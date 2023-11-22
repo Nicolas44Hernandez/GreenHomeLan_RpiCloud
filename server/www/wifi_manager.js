@@ -1,8 +1,6 @@
 /* RPI box URL */
-// TODO: expose to internet 
-//const base_wifi_url = 'http://localhost:5000/wifi';
-//const base_wifi_url = 'http://192.168.1.20:5000/wifi';
-const base_wifi_url = 'http://192.168.1.19:5000/wifi';
+const base_wifi_url = 'http://192.168.1.17:5000/wifi';
+
 const socket_wifi = io();
 
 /* Wifi Info section  */
