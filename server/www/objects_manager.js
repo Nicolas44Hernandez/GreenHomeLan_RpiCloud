@@ -1,5 +1,6 @@
 const socket_objects = io();
-const base_commands_url = "http://192.168.1.17:5000/commands"
+base_commands_url = ""
+
 
 /* Connected objects info section  */
 connected_objects_info = document.getElementById('overlapped_objects');
@@ -404,4 +405,9 @@ socket_objects.on("thread_connected_nodes_keep_alive", (body) => {
             cam5_last_ka.textContent = body[node_id];
         }
     }     
+});
+
+socket_objects.on("orquestrator_base_url", (url) => { 
+    console.log('URL RECEIVED IN OBJECTS MANAGER '+ url);
+    base_commands_url=url+"commands";
 });

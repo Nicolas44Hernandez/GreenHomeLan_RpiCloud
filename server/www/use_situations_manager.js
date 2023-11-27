@@ -1,6 +1,6 @@
 /* Constants */
 const socket_use_situation = io();
-const base_use_situations_url = "http://192.168.1.17:5000/use_situations"
+base_use_situations_url = ""
 
 /* Use situations buttons */
 use_situation_presence_day_button = document.getElementById('us-button-presence-day'); 
@@ -169,6 +169,11 @@ socket_use_situation.on("use_situation", (use_situation) => {
     if(!setting_use_situation){
         set_current_use_situation_icon(use_situation);    
     }   
+});
+
+socket_use_situation.on("orquestrator_base_url", (url) => { 
+    console.log('URL RECEIVED IN USE SITUATIONS MANAGER '+ url);
+    base_use_situations_url=url+"use_situations";
 });
 
 

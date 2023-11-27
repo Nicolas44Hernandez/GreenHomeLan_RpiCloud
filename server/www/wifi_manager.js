@@ -1,5 +1,5 @@
 /* RPI box URL */
-const base_wifi_url = 'http://192.168.1.17:5000/wifi';
+base_wifi_url = '';
 
 const socket_wifi = io();
 
@@ -140,8 +140,14 @@ function set_wifi_band_status(band, new_status){
 }
 
 socket_wifi.on("wifi_status_detail", (wifi_status, band_2GHz_status, band_5GHz_status, band_6GHz_status) => { 
+    console.log('WIFI STATUS DETAIL');
     toogle_wifi_all.checked = wifi_status; 
     toogle_wifi_2GHz.checked = band_2GHz_status; 
     toogle_wifi_5GHz.checked = band_5GHz_status; 
     toogle_wifi_6GHz.checked = band_6GHz_status; 
+});
+
+socket_wifi.on("orquestrator_base_url", (url) => { 
+    console.log('URL RECEIVED IN WIFI MANAGER '+ url);
+    base_wifi_url=url+"wifi";
 });

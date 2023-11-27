@@ -1,5 +1,5 @@
 const socket_alimelo = io();
-const base_electrical_panel_url = 'http://192.168.1.17:5000/electrical_panel';
+base_electrical_panel_url = '';
 
 /* Alimelo info section  */
 alimelo_info = document.getElementById('overlapped_alimelo');
@@ -200,4 +200,9 @@ socket_alimelo.on("power_outlets_status", (
         toogle_outlet1.checked = po0_status; 
         toogle_outlet2.checked = po1_status; 
         toogle_outlet3.checked = po2_status;                     
+});
+
+socket_alimelo.on("orquestrator_base_url", (url) => { 
+    console.log('URL RECEIVED IN ALIMELO MANAGER '+ url);
+    base_electrical_panel_url=url+"electrical_panel";
 });
