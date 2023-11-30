@@ -103,7 +103,7 @@ socket_alarm.on("alarm_event", (trigger) => {
         // Set end of alarm (video stream)
         setTimeout(set_end_of_alarm, 38000);
     }
-    else if(trigger == "presence_detection"){
+    else if(trigger == "presence"){
         clear_header_icons();
         presence_alarm_audio.play();
         presence_blink = true;
