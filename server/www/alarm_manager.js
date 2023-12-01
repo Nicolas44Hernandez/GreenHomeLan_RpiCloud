@@ -99,7 +99,7 @@ socket_alarm.on("alarm_event", (trigger) => {
         doorbell_notification_audio.play();
         doorbell_blink = true;
         // Set video stream start
-        setTimeout(start_video_stream, 8000);
+        setTimeout(start_video_stream_cam1, 8000);
         // Set end of alarm (video stream)
         setTimeout(set_end_of_alarm, 38000);
     }
@@ -108,7 +108,7 @@ socket_alarm.on("alarm_event", (trigger) => {
         presence_alarm_audio.play();
         presence_blink = true;
         // Set video stream start
-        setTimeout(start_video_stream, 8000);
+        setTimeout(start_video_stream_cam2, 8000);
         // Set end of alarm (video stream)
         setTimeout(set_end_of_alarm, 38000);
     } 

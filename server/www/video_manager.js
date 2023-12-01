@@ -1,5 +1,5 @@
 /* Constants */
-const url_camera_1 = "http://192.168.1.40:5000/video_stream"
+const url_camera_1 = "http://192.168.1.42:5000/video_stream"
 const url_camera_2 = "http://192.168.1.41:5000/video_stream"
 const default_image = "imgs/default.jpg"
 
