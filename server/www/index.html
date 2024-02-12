@@ -68,15 +68,6 @@
                                     <i class="fa-solid fa-land-mine-on"></i>                            
                                 </span>                 
                             </div>    
-                            <div class="column column-icon column-icon-alert">
-                                <span id="icon-battery">
-                                    <i class="fa-solid fa-battery-empty"></i>
-                                    <span id="icon-number">
-                                        <i class="fa-solid"></i>                           
-                                    </span>   
-                                </span>  
-                                            
-                            </div> 
                             <div class="column column-icon column-icon-alert-power">
                                 <span id="icon-low-power">
                                     <i class="fa-solid fa-battery-empty"></i>                            
@@ -140,87 +131,10 @@
                     </div>                         
                 </div>    
                 <div id="overlapped_alimelo" class="alimelo-container">
-                    <p class="alimelo-info-header">Alimelo Status</p>  
-                    <div>
-                        <div class="column">                           
-                            <div>
-                                <div class="column">
-                                    <p class="alimelo-info-key">Bus voltage:</p>
-                                </div>
-                                <div class="column">
-                                    <p id ="alimelo-busvoltage" class="alimelo-info-value"></p>
-                                </div>  
-                            </div>
-                            <div>
-                                <div class="column">
-                                    <p class="alimelo-info-key">Shunt Voltage:</p>
-                                </div>
-                                <div class="column">
-                                    <p id ="alimelo-shuntvoltage" class="alimelo-info-value"></p>
-                                </div>                                                                
-                            </div>   
-                            <div>
-                                <div class="column">
-                                    <p class="alimelo-info-key">Load voltage:</p>
-                                </div>
-                                <div class="column">
-                                    <p id ="alimelo-loadvoltage" class="alimelo-info-value"></p>
-                                </div>                                                                
-                            </div>  
-                            <div>
-                                <div class="column">
-                                    <p class="alimelo-info-key">Current supplied:</p>
-                                </div>
-                                <div class="column">
-                                    <p id ="alimelo-current" class="alimelo-info-value"></p>
-                                </div>                                                                
-                            </div>  
-                            <div>
-                                <div class="column">
-                                    <p class="alimelo-info-key">Power supplied:</p>
-                                </div>
-                                <div class="column">
-                                    <p id ="alimelo-power" class="alimelo-info-value"></p>
-                                </div>                                                                
-                            </div>
-                        </div> 
-                        <div class="column">                            
-                            <div>
-                                <div class="column">
-                                    <p class="alimelo-info-key">Battery level:</p>
-                                </div>
-                                <div class="column">
-                                    <p id ="alimelo-battery" class="alimelo-info-value"></p>
-                                </div>                                                                
-                            </div>  
-                            <div>
-                                <div class="column">
-                                    <p class="alimelo-info-key">Socket supplied:</p>
-                                </div>
-                                <div class="column">
-                                    <p id ="alimelo-electricsocket" class="alimelo-info-value"></p>
-                                </div>                                                                
-                            </div>  
-                            <div>
-                                <div class="column">
-                                    <p class="alimelo-info-key">Powered by battery:</p>
-                                </div>
-                                <div class="column">
-                                    <p id ="alimelo-poweredbybattery" class="alimelo-info-value"></p>
-                                </div>                                                                
-                            </div>  
-                            <div>
-                                <div class="column">
-                                    <p class="alimelo-info-key">Charging battery:</p>
-                                </div>
-                                <div class="column">
-                                    <p id ="alimelo-charging" class="alimelo-info-value"></p>
-                                </div>                                                                
-                            </div>                                            
-                        </div>   
-                    </div>
-                    <div>
-                        <div>
+                    <p class="energy-info-header">Energy</p>  
+                    <!-- Electrical outlets info -->
+                    <div class="row">
+                        <div class="column-power-outlet">
                             <div class="column">
                                 <p id ="power-outlet-1" class="relay-info">Outlet 1</p>
                             </div>
@@ -236,7 +150,7 @@
                                 </span> 
                             </div>                                            
                         </div>
-                        <div>
+                        <div class="column">
                             <div class="column">
                                 <p id ="power-outlet-2" class="relay-info">Outlet 2</p>
                             </div>
@@ -252,7 +166,7 @@
                                 </span> 
                             </div>                                            
                         </div>      
-                        <div>
+                        <div class="column">
                             <div class="column">
                                 <p id ="power-outlet-3" class="relay-info">Outlet 3</p>
                             </div>
@@ -269,6 +183,63 @@
                             </div>                                            
                         </div>      
                     </div>
+                    <!-- Energy recommendation info -->
+                    <div class="row">
+                        <div class="column">
+                            <div class="column-energy-recommendation">
+                                <p class="energy-recommendation-info-key">Power received:</p>
+                            </div>
+                        </div>                        
+                        <div class="column">
+                            <p id ="power-received" class="energy-recommendation-info-value"></p>
+                        </div>  
+                    </div>  
+                    <!-- Alimelo info -->
+                    <p class="alimelo-info-header">Alimelo</p>
+                    <div class="row">
+                        <!-- COL1 -->
+                        <div class="column">
+                            <!-- TOP -->
+                            <div class="row">  
+                                <div class="column">
+                                    <p class="alimelo-info-key">Battery level:</p>
+                                </div>
+                                <div class="column">
+                                    <p id ="alimelo-battery" class="alimelo-info-value"></p>
+                                </div>      
+                            </div>    
+                            <!-- BOTTOM -->
+                            <div class="row">
+                                <div class="column">
+                                    <p class="alimelo-info-key">Powered by battery:</p>
+                                </div>
+                                <div class="column">
+                                    <p id ="alimelo-poweredbybattery" class="alimelo-info-value"></p>
+                                </div> 
+                            </div>                                               
+                        </div>
+                        <!-- COL2 -->
+                        <div class="column">
+                            <!-- TOP -->
+                            <div class="row">  
+                                <div class="column">
+                                    <p class="alimelo-info-key">Socket supplied:</p>
+                                </div>
+                                <div class="column">
+                                    <p id ="alimelo-electricsocket" class="alimelo-info-value"></p>
+                                </div>                                
+                            </div>    
+                            <!-- BOTTOM -->
+                            <div class="row">
+                                <div class="column">
+                                    <p class="alimelo-info-key">Charging battery:</p>
+                                </div>
+                                <div class="column">
+                                    <p id ="alimelo-charging" class="alimelo-info-value"></p>
+                                </div> 
+                            </div>                                               
+                        </div>
+                    </div> 
                 </div>  
                 <div id="overlapped_objects" class="objects-container">
                     <p class="objects-info-header">Connected Objects</p>  

@@ -6,11 +6,6 @@ alimelo_info = document.getElementById('overlapped_alimelo');
 alimelo_info.style.visibility = "hidden";
 
 // Alimelo status values
-alimelo_busvoltage = document.getElementById('alimelo-busvoltage');
-alimelo_shuntvoltage = document.getElementById('alimelo-shuntvoltage');
-alimelo_loadvoltage = document.getElementById('alimelo-loadvoltage');
-alimelo_current_mA = document.getElementById('alimelo-current');
-alimelo_power_mW = document.getElementById('alimelo-power');
 alimelo_batLevel = document.getElementById('alimelo-battery');
 alimelo_power_supplied = document.getElementById('alimelo-electricsocket');
 alimelo_is_powered_by_battery = document.getElementById('alimelo-poweredbybattery');
@@ -23,6 +18,7 @@ toogle_outlet2 = document.getElementById("toogle-power-outlet-2");
 spinner_outlet2 = document.getElementById("spinner-power-outlet-2");
 toogle_outlet3 = document.getElementById("toogle-power-outlet-3");
 spinner_outlet3 = document.getElementById("spinner-power-outlet-3");
+power_received = document.getElementById('power-received');
 
 
 /* Electrical panel initial values*/
@@ -35,15 +31,11 @@ spinner_outlet3.style.visibility = "hidden";
 
 
 /* Set init values */
-alimelo_busvoltage.textContent = "n/a";
-alimelo_shuntvoltage.textContent = "n/a";
-alimelo_loadvoltage.textContent = "n/a";
-alimelo_current_mA.textContent = "n/a";
-alimelo_power_mW.textContent = "n/a";
 alimelo_batLevel.textContent = "n/a";
 alimelo_power_supplied.textContent = "n/a";
 alimelo_is_powered_by_battery.textContent = "n/a";
 alimelo_is_charging.textContent = "n/a";
+power_received.textContent = "n/a";
 
 /* Electrical pannel toogles on event functions  */
 function set_electrical_panel_toogles_on_event(){    
@@ -141,39 +133,29 @@ function set_outlet_status(outlet_number, new_status){
         spinner_outlet3.style.visibility = "hidden";
     };
 }
+
+socket_alimelo.on("power_received_from_supplier", (power_percentage) => {
+    if(power_percentage != null){
+        console.log("power_received:" + power_percentage);
+        if(power_percentage=="100%"){
+            power_received.style.color = "green";
+        }
+        else if(power_percentage=="25%"){
+            power_received.style.color = "yellow";
+        }
+        else{
+            power_received.style.color = "red";
+        }
+        power_received.textContent = power_percentage;
+    }                       
+});
+
 socket_alimelo.on("alimelo_status_detail", (
-    busvoltage,
-    shuntvoltage,
-    loadvoltage,
-    current_mA,
-    power_mW,
     batLevel,
     power_supplied,
     powered_by_battery,
     charging,
-    ) => { 
-        console.log("En el metodo");
-        if(busvoltage != null){
-            console.log("busvoltage:" + busvoltage);
-            alimelo_busvoltage.textContent = busvoltage.toFixed(2) + " mV";
-        }
-        if(shuntvoltage != null){
-            console.log("shuntvoltage:" + shuntvoltage);
-            alimelo_shuntvoltage.textContent = shuntvoltage.toFixed(2) + " mV";
-        }
-        if(loadvoltage != null){
-            console.log("loadvoltage:" + loadvoltage);
-            alimelo_loadvoltage.textContent = loadvoltage.toFixed(2) + " mV";
-        }
-        if(current_mA != null){
-            console.log("current_mA:" + current_mA);
-            alimelo_current_mA.textContent = current_mA.toFixed(2) + " mA";
-        }
-        if(power_mW != null){
-            console.log("power_mW:" + power_mW);
-            alimelo_power_mW.textContent = power_mW.toFixed(2) + " mW";
-        }
-        console.log("batlevel: "+ alimelo_batLevel);
+    ) => {
         if(batLevel != null){
             console.log("batLevel:" + batLevel);
             alimelo_batLevel.textContent = batLevel + '%';

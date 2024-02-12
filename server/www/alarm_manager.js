@@ -7,8 +7,6 @@ button_alarm_audio = document.getElementById("button_alarm_audio");
 battery_alarm_audio = document.getElementById("battery_alarm_audio");
 presence_icon = document.getElementById('icon-presence');
 emergency_icon = document.getElementById('icon-emergency');
-battery_button_icon = document.getElementById('icon-battery');
-battery_button_number_icon = document.getElementById('icon-number');
 low_power_icon = document.getElementById("icon-low-power");
 door_icon = document.getElementById('icon-door');
 
@@ -16,13 +14,10 @@ door_icon = document.getElementById('icon-door');
 let doorbell_blink = false;
 let presence_blink = false;
 let emergency_blink = false;
-let battery_button_blink = false;
 let socket_blink = false;
 door_icon.style.visibility = "hidden";
 presence_icon.style.visibility = "hidden";
 emergency_icon.style.visibility = "hidden";
-battery_button_icon.style.visibility = "hidden";
-battery_button_number_icon.style.visibility = "hidden";
 low_power_icon.style.visibility = "hidden";
 
 /* Blink function icons */
@@ -57,19 +52,6 @@ var interval_icons = window.setInterval(function(){
     else{
         emergency_icon.style.visibility = 'hidden';
     }
-    if(battery_button_blink){
-        if(battery_button_icon.style.visibility == 'hidden'){
-            battery_button_icon.style.visibility = 'visible';
-            battery_button_number_icon.style.visibility = 'visible';
-        }else{
-            battery_button_icon.style.visibility = 'hidden';
-            battery_button_number_icon.style.visibility = 'hidden';
-        }
-    }  
-    else{
-        battery_button_icon.style.visibility = 'hidden';
-        battery_button_number_icon.style.visibility = 'hidden'
-    }
     if(socket_blink){
         if(low_power_icon.style.visibility == 'hidden'){
             low_power_icon.style.visibility = 'visible';
@@ -87,7 +69,6 @@ function set_end_of_alarm(){
     doorbell_blink = false;
     presence_blink = false;  
     emergency_blink = false; 
-    battery_button_blink = false; 
     socket_blink = false;      
     stop_video_stream();
 }
@@ -116,24 +97,6 @@ socket_alarm.on("alarm_event", (trigger) => {
         clear_header_icons();
         button_alarm_audio.play();
         emergency_blink = true;
-        // Set end of alarm (video stream)
-        setTimeout(set_end_of_alarm, 10000);
-    } 
-    else if(trigger == "battery_btn_1"){
-        clear_header_icons();
-        battery_alarm_audio.play();
-        battery_button_number_icon.classList.remove("fa-2");
-        battery_button_number_icon.classList.add("fa-1");
-        battery_button_blink = true;        
-        // Set end of alarm (video stream)
-        setTimeout(set_end_of_alarm, 10000);
-    } 
-    else if(trigger == "battery_btn_2"){
-        clear_header_icons();
-        battery_alarm_audio.play();
-        battery_button_number_icon.classList.remove("fa-1");
-        battery_button_number_icon.classList.add("fa-2");
-        battery_button_blink = true;
         // Set end of alarm (video stream)
         setTimeout(set_end_of_alarm, 10000);
     } 

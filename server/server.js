@@ -37,6 +37,7 @@ app.post('/status', function(request, response){
   console.log("Power Outlet 1 powered: " + request.body.po1_powered);
   console.log("Power Outlet 2 status: " + request.body.po2_status);
   console.log("Power Outlet 2 powered: " + request.body.po2_powered);
+  console.log("Energy limitations: " + request.body.energy_limitations);
   io.sockets.emit("home_connected", true);
   io.sockets.emit("orquestrator_base_url", request.body.orquestrator_base_url);
   io.sockets.emit("wifi_status_general", request.body.wifi_status);
@@ -49,14 +50,13 @@ app.post('/status', function(request, response){
   );
   io.sockets.emit("use_situation", request.body.use_situation);
   io.sockets.emit("alimelo_battery_level", request.body.alimelo_battery_level);
-  io.sockets.emit("alimelo_electric_socket_status", request.body.alimelo_power_supplied);
+  io.sockets.emit("power_received", request.body.energy_limitations);
+  io.sockets.emit(
+    "power_received_from_supplier",    
+    request.body.energy_limitations,
+  );
   io.sockets.emit(
     "alimelo_status_detail",    
-    Number(request.body.alimelo_busvoltage),
-    Number(request.body.alimelo_shuntvoltage),
-    Number(request.body.alimelo_loadvoltage),
-    Number(request.body.alimelo_current_mA),
-    Number(request.body.alimelo_power_mW),
     Number(request.body.alimelo_battery_level),
     Boolean(strictBoolean(request.body.alimelo_power_supplied)),
     Boolean(strictBoolean(request.body.alimelo_is_powered_by_battery)),

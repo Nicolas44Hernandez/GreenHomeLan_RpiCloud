@@ -125,13 +125,16 @@ socket.on("wifi_status_general", (wifi_status) => {
     }
 });
 
-socket.on("alimelo_electric_socket_status", (socket_status) => { 
-    if(socket_status == "unknown"){
+socket.on("power_received", (energy_limitations) => { 
+    if(energy_limitations == "unknown"){
         return;
     }
-    console.log("ALIMELO SOCKET STATUS: "+ socket_status)
-    if(socket_status=="True"){
+    console.log("ENERGY LIMITATION: "+ energy_limitations)
+    if(energy_limitations=="100%"){
         plug_icon.style.color = "green";
+    }
+    else if(energy_limitations=="25%"){
+        plug_icon.style.color = "yellow";
     }
     else{
         plug_icon.style.color = "red";
