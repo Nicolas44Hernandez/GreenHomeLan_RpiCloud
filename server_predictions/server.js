@@ -21,21 +21,28 @@ function strictBoolean(str) {
 }
 
 app.post('/rtt_prediction', function(request, response){
-  //console.log('Received rtt prediction');
+  console.log('Received rtt prediction');
   var rtt_prediction_data = {
     livebox_traffic: parseFloat(request.body.livebox_traffic),
     traffic_5GHz: parseFloat(request.body.traffic_5GHz),
     traffic_2GHz: parseFloat(request.body.traffic_2GHz),
-    st1_traffic: parseFloat(request.body.st1_traffic),
-    st2_traffic: parseFloat(request.body.st2_traffic),
-    st1_rtt: parseFloat(request.body.st1_rtt),
-    st2_rtt: parseFloat(request.body.st2_rtt),
-    st1_mean_rtt: parseFloat(request.body.st1_mean_rtt),
-    st2_mean_rtt: parseFloat(request.body.st2_mean_rtt),
     band_5ghz_status: parseFloat(request.body.band_5ghz_status),
+    stations_counters: JSON.parse(request.body.stations_counters),    
   } 
+  io.sockets.emit(
+    "box_traffic", 
+    rtt_prediction_data.livebox_traffic, 
+    rtt_prediction_data.traffic_5GHz, 
+    rtt_prediction_data.traffic_2GHz,
+  );  
+  io.sockets.emit("stations_traffic", rtt_prediction_data.stations_counters);  
+  io.sockets.emit("stations_rtt", rtt_prediction_data.stations_counters);  
+  io.sockets.emit(
+    "band_status", 
+    rtt_prediction_data.band_5ghz_status, 
+    rtt_prediction_data.livebox_traffic, 
+  );  
   
-  io.sockets.emit("rtt_prediction_notification", rtt_prediction_data);  
   response.send(request.body);    // echo the result back
 });
 
