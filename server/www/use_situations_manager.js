@@ -11,6 +11,8 @@ use_situation_presence_night_button = document.getElementById('us-button-presenc
 use_situation_presence_night_icon = document.getElementById('icon-presence-night');  
 use_situation_absence_button = document.getElementById('us-button-absence');
 use_situation_absence_icon = document.getElementById('icon-absence');
+use_situation_deep_sleep_button = document.getElementById('us-button-deep-sleep');
+use_situation_deep_sleep_icon = document.getElementById('icon-deep-sleep');
 
 // Use situations 
 let setting_use_situation = false;
@@ -44,6 +46,12 @@ function set_buttons_on_click(){
             set_use_situation("ABSENCE_LOW_CONSUMPTION");
         }
     }  
+    use_situation_deep_sleep_button.onclick = function(){
+        if(!setting_use_situation){
+            console.log("DEEP_SLEEP");
+            set_use_situation("DEEP_SLEEP");
+        }
+    }  
 }
 set_buttons_on_click()
 
@@ -64,6 +72,9 @@ var interval_use_situations = window.setInterval(function(){
             case "ABSENCE_LOW_CONSUMPTION":
                 blinking_icon = document.getElementById('icon-absence');
                 break; 
+            case "DEEP_SLEEP":
+                blinking_icon = document.getElementById('icon-deep-sleep');
+                break;
             default:
                 blinking = false;
                 console.error("Invalid use situation: "+ new_use_situation);
@@ -82,6 +93,7 @@ var interval_use_situations = window.setInterval(function(){
         use_situation_presence_home_office_icon.style.visibility = 'visible';
         use_situation_presence_night_icon.style.visibility = 'visible';
         use_situation_absence_icon.style.visibility = 'visible';
+        use_situation_deep_sleep_icon.style.visibility = 'visible';
     }
 }, 500);
 
@@ -90,6 +102,7 @@ function clear_use_situation_buttons(){
     use_situation_presence_home_office_icon.style.color = "white";
     use_situation_presence_night_icon.style.color = "white";
     use_situation_absence_icon.style.color = "white";
+    use_situation_deep_sleep_icon.style.color = "white";
 }
 
 function set_use_situation(use_situation){    
@@ -143,24 +156,35 @@ function set_current_use_situation_icon(use_situation){
         use_situation_presence_home_office_icon.style.color = "white";
         use_situation_presence_night_icon.style.color = "white";
         use_situation_absence_icon.style.color = "white";
+        use_situation_deep_sleep_icon.style.color = "white";
     }
     else if(use_situation=="PRESENCE_HOME_OFFICE"){
         use_situation_presence_day_icon.style.color = "white";
         use_situation_presence_home_office_icon.style.color = "orangered";
         use_situation_presence_night_icon.style.color = "white";
         use_situation_absence_icon.style.color = "white";
+        use_situation_deep_sleep_icon.style.color = "white";
     }
     else if(use_situation=="PRESENCE_NIGHT_LOW_CONSUMPTION"){
         use_situation_presence_day_icon.style.color = "white";
         use_situation_presence_home_office_icon.style.color = "white";
         use_situation_presence_night_icon.style.color = "orangered";
         use_situation_absence_icon.style.color = "white";
+        use_situation_deep_sleep_icon.style.color = "white";
     }
     else if(use_situation=="ABSENCE_LOW_CONSUMPTION"){
         use_situation_presence_day_icon.style.color = "white";
         use_situation_presence_home_office_icon.style.color = "white";
         use_situation_presence_night_icon.style.color = "white";
         use_situation_absence_icon.style.color = "orangered";
+        use_situation_deep_sleep_icon.style.color = "white";
+    }  
+    else if(use_situation=="DEEP_SLEEP"){
+        use_situation_presence_day_icon.style.color = "white";
+        use_situation_presence_home_office_icon.style.color = "white";
+        use_situation_presence_night_icon.style.color = "white";
+        use_situation_absence_icon.style.color = "white";
+        use_situation_deep_sleep_icon.style.color = "orangered";
     }  
 }
 
