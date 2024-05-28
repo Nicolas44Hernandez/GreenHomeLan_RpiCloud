@@ -248,31 +248,38 @@ function retreive_actions_list(){
     const url = base_commands_url;
     console.log("url: "+ url);
 
-    // send the request and wait for the response
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", url);
-    xhr.setRequestHeader("Accept", "*/*");
-    xhr.send(null);
+    if(url.length > 5){
+        // send the request and wait for the response
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.setRequestHeader("Accept", "*/*");
+        xhr.send(null);
 
-    xhr.onload = function() {        
-        const response_json = JSON.parse(xhr.responseText);
-        if (xhr.status === 200) {
-            const jsonObject = JSON.parse(xhr.responseText);
-            actions_list = jsonObject["commands"];
-            fill_actions_dropdowns();
-            retreive_current_actions();
-            retreived = true;
+        xhr.onload = function() {        
+            const response_json = JSON.parse(xhr.responseText);
+            if (xhr.status === 200) {
+                const jsonObject = JSON.parse(xhr.responseText);
+                actions_list = jsonObject["commands"];
+                fill_actions_dropdowns();
+                retreive_current_actions();
+                retreived = true;
 
-        } else {
-            console.error("Error:", xhr.statusText);
+            } else {
+                console.error("Error:", xhr.statusText);
+                actions_list = [];
+            }
+            setting_use_situation = false;        
+        };
+        xhr.onerror = function() {
+            console.error("Network error"); 
             actions_list = [];
-        }
-        setting_use_situation = false;        
-    };
-    xhr.onerror = function() {
-        console.error("Network error"); 
+        };
+    }
+    else{
+        console.log("Base url not yet received"); 
         actions_list = [];
-    };
+    }
+    
 }
 
 function retreive_current_actions(){
