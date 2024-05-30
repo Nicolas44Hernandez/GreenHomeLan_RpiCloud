@@ -74,6 +74,12 @@ function clear_header_icons(){
     objects_icon.style.comor = "gray";
 }
 
+function deep_sleep(){
+    clear_header_icons();
+    hide_image();
+    stop_video_stream(); 
+}
+
 /* Buttons on click functions  */
 function set_buttons_on_click(){
     home_icon.onclick = function(){        
@@ -199,4 +205,8 @@ socket.on("device_connected", (connected) => {
     else{
         objects_icon.style.color = "red";
     }
+});
+
+socket_wifi.on("deep_sleep", () => { 
+    deep_sleep();
 });

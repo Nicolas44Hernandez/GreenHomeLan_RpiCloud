@@ -38,6 +38,11 @@ app.post('/status', function(request, response){
   console.log("Power Outlet 2 status: " + request.body.po2_status);
   console.log("Power Outlet 2 powered: " + request.body.po2_powered);
   console.log("Energy limitations: " + request.body.energy_limitations);
+
+  if(request.body.use_situation == "DEEP_SLEEP"){
+    io.sockets.emit("deep_sleep");
+    return;
+  }
   io.sockets.emit("home_connected", true);
   io.sockets.emit("orquestrator_base_url", request.body.orquestrator_base_url);
   io.sockets.emit("wifi_status_general", request.body.wifi_status);
