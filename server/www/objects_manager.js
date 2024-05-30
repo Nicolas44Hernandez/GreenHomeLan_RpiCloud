@@ -256,7 +256,7 @@ function retreive_actions_list(){
         xhr.send(null);
 
         xhr.onload = function() {        
-            const response_json = JSON.parse(xhr.responseText);
+            JSON.parse(xhr.responseText);
             if (xhr.status === 200) {
                 const jsonObject = JSON.parse(xhr.responseText);
                 actions_list = jsonObject["commands"];
@@ -286,35 +286,41 @@ function retreive_current_actions(){
     console.log("Retreiving current actions");
     // construct the final URL with the query string
     const url = `${base_commands_url}/current`;
-    console.log("url: "+ url);
+    //console.log("url: "+ url);
 
-    // send the request and wait for the response
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", url);
-    xhr.setRequestHeader("Accept", "*/*");
-    xhr.send(null);
+    if(url.length > 9 ){
+        // send the request and wait for the response
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.setRequestHeader("Accept", "*/*");
+        xhr.send(null);
 
-    xhr.onload = function() {        
-        const response_json = JSON.parse(xhr.responseText);
-        if (xhr.status === 200) {
-            const jsonObject = JSON.parse(xhr.responseText);
-            current_actions_list = jsonObject["commands"];
-            action1=current_actions_list[0];
-            action2=current_actions_list[1];
-            action3=current_actions_list[2];
-            action4=current_actions_list[3];
-            fill_actions_buttons();
+        xhr.onload = function() {        
+            const response_json = JSON.parse(xhr.responseText);
+            if (xhr.status === 200) {
+                const jsonObject = JSON.parse(xhr.responseText);
+                current_actions_list = jsonObject["commands"];
+                action1=current_actions_list[0];
+                action2=current_actions_list[1];
+                action3=current_actions_list[2];
+                action4=current_actions_list[3];
+                fill_actions_buttons();
 
-        } else {
-            console.error("Error:", xhr.statusText);
+            } else {
+                console.error("Error:", xhr.statusText);
+                actions_list = [];
+            }
+            setting_use_situation = false;        
+        };
+        xhr.onerror = function() {
+            console.error("Network error"); 
             actions_list = [];
-        }
-        setting_use_situation = false;        
-    };
-    xhr.onerror = function() {
-        console.error("Network error"); 
+        };
+    }
+    else{
+        console.log("Base url not yet received"); 
         actions_list = [];
-    };
+    }    
 }
 
 function set_actions_list(){
@@ -338,20 +344,25 @@ function set_actions_list(){
     // construct the final URL with the query string
     const url = `${base_commands_url}/current?${queryString}`;
     console.log("url: "+ url);
+    
+    if(url.length > (queryString.length + 11)){
+        // send the request and wait for the response
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", url);
+        xhr.setRequestHeader("Accept", "*/*");
+        xhr.send(null);
 
-    // send the request and wait for the response
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", url);
-    xhr.setRequestHeader("Accept", "*/*");
-    xhr.send(null);
-
-    xhr.onload = function() {        
-        const response_json = JSON.parse(xhr.responseText);
-        console.log(response_json);
-    };
-    xhr.onerror = function() {
-        console.error("Network error");
-    };
+        xhr.onload = function() {        
+            const response_json = JSON.parse(xhr.responseText);
+            console.log(response_json);
+        };
+        xhr.onerror = function() {
+            console.error("Network error");
+        };
+    }
+    else{
+        console.log("Base url not yet received"); 
+    }    
 }
 
 function fill_actions_buttons(){

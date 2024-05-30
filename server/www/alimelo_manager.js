@@ -86,52 +86,73 @@ function set_outlet_status(outlet_number, new_status){
     // construct the final URL with the query string
     const url = `${base_electrical_panel_url}?${queryString}`;
     console.log("url: "+ url);
-        
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", url);
-    xhr.setRequestHeader("Accept", "*/*");
-    xhr.send(null);
+    
+    if(url.length > (queryString.length + 3)){
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", url);
+        xhr.setRequestHeader("Accept", "*/*");
+        xhr.send(null);
 
-    xhr.onload = function() {        
-        const response_json = JSON.parse(xhr.responseText);
-        if (xhr.status === 200) {
+        xhr.onload = function() {        
+            const response_json = JSON.parse(xhr.responseText);
+            if (xhr.status === 200) {
+                switch(outlet_number){   
+                    case 1: 
+                        toogle_outlet1.checked = new_status;
+                        break;    
+                    case 2:
+                        toogle_outlet2.checked = new_status;
+                        break;    
+                    case 3:
+                        toogle_outlet3.checked = new_status;
+                        break;
+                    default:            
+                        break;
+                }   
+            } 
+            spinner_outlet1.style.visibility = "hidden";
+            spinner_outlet2.style.visibility = "hidden";
+            spinner_outlet3.style.visibility = "hidden";
+        };
+        xhr.onerror = function() {
+            console.error("Network error");
             switch(outlet_number){   
-                case 1: 
-                    toogle_outlet1.checked = new_status;
-                    break;    
-                case 2:
-                    toogle_outlet2.checked = new_status;
-                    break;    
-                case 3:
-                    toogle_outlet3.checked = new_status;
-                    break;
-                default:            
-                    break;
-            }   
-        } 
-        spinner_outlet1.style.visibility = "hidden";
-        spinner_outlet2.style.visibility = "hidden";
-        spinner_outlet3.style.visibility = "hidden";
-    };
-    xhr.onerror = function() {
-        console.error("Network error");
+                    case 1: 
+                        toogle_outlet1.checked = !new_status;
+                        break;    
+                    case 2:
+                        toogle_outlet2.checked = !new_status;
+                        break;    
+                    case 3:
+                        toogle_outlet3.checked = !new_status;
+                        break;
+                    default:            
+                        break;
+            }  
+            spinner_outlet1.style.visibility = "hidden";
+            spinner_outlet2.style.visibility = "hidden";
+            spinner_outlet3.style.visibility = "hidden";
+        };
+    }
+    else{
+        console.log("Base url not yet received"); 
         switch(outlet_number){   
-                case 1: 
-                    toogle_outlet1.checked = !new_status;
-                    break;    
-                case 2:
-                    toogle_outlet2.checked = !new_status;
-                    break;    
-                case 3:
-                    toogle_outlet3.checked = !new_status;
-                    break;
-                default:            
-                    break;
+            case 1: 
+                toogle_outlet1.checked = !new_status;
+                break;    
+            case 2:
+                toogle_outlet2.checked = !new_status;
+                break;    
+            case 3:
+                toogle_outlet3.checked = !new_status;
+                break;
+            default:            
+                break;
         }  
         spinner_outlet1.style.visibility = "hidden";
         spinner_outlet2.style.visibility = "hidden";
         spinner_outlet3.style.visibility = "hidden";
-    };
+    }   
 }
 
 socket_alimelo.on("power_received_from_supplier", (power_percentage) => {

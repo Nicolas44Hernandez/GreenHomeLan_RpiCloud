@@ -121,29 +121,36 @@ function set_use_situation(use_situation){
     const url = `${base_use_situations_url}/current?${queryString}`;
     console.log("url: "+ url);
 
-    // send the request and wait for the response
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", url);
-    xhr.setRequestHeader("Accept", "*/*");
-    xhr.send(null);
+    if(url.length > (queryString.length + 11)){
+        // send the request and wait for the response
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", url);
+        xhr.setRequestHeader("Accept", "*/*");
+        xhr.send(null);
 
-    xhr.onload = function() {        
-        const response_json = JSON.parse(xhr.responseText);
-        if (xhr.status === 200) {
-            console.log("OK");
-            console.log(xhr.responseText);
-            set_current_use_situation_icon(use_situation)
-        } else {
-            console.error("Error:", xhr.statusText);
+        xhr.onload = function() {        
+            const response_json = JSON.parse(xhr.responseText);
+            if (xhr.status === 200) {
+                console.log("OK");
+                console.log(xhr.responseText);
+                set_current_use_situation_icon(use_situation)
+            } else {
+                console.error("Error:", xhr.statusText);
+                clear_use_situation_buttons();
+            }
+            setting_use_situation = false;        
+        };
+        xhr.onerror = function() {
+            console.error("Network error"); 
             clear_use_situation_buttons();
-        }
-        setting_use_situation = false;        
-    };
-    xhr.onerror = function() {
-        console.error("Network error"); 
+            setting_use_situation = false;       
+        };
+    }
+    else{
+        console.log("Base url not yet received"); 
         clear_use_situation_buttons();
-        setting_use_situation = false;       
-    };
+        setting_use_situation = false;  
+    }
 }
 
 function set_current_use_situation_icon(use_situation){
