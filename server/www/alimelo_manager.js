@@ -110,6 +110,21 @@ function set_outlet_status(outlet_number, new_status){
                         break;
                 }   
             } 
+            else{
+                switch(outlet_number){   
+                    case 1: 
+                        toogle_outlet1.checked = !new_status;
+                        break;    
+                    case 2:
+                        toogle_outlet2.checked = !new_status;
+                        break;    
+                    case 3:
+                        toogle_outlet3.checked = !new_status;
+                        break;
+                    default:            
+                        break;
+                }
+            }
             spinner_outlet1.style.visibility = "hidden";
             spinner_outlet2.style.visibility = "hidden";
             spinner_outlet3.style.visibility = "hidden";
