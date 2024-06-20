@@ -25,6 +25,12 @@ iframe{
     margin-right: 2px;
     margin-left: 8px;
 }
+.row-power-strip-outlets{
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-right: 2px;
+    margin-left: 8px;
+}
 .column-energy-recommendation{
     margin-left: 100px;
 }
@@ -95,9 +101,23 @@ iframe{
     color: white;
     margin: 2px;
 }
+.power-strip-relay-info {
+    font-size:1.5em;
+    color: white;
+    margin: 2px;
+    margin-right: 30px;
+    margin-bottom: 30px;
+}
 .energy-info-header {
     font-size:2em;
     color: orangered;
+    margin: 15px;
+    margin-bottom: 28px;
+    text-align: center;
+}
+.power-strip-info-header {
+    font-size:2em;
+    color: rgb(255, 217, 0);
     margin: 15px;
     margin-bottom: 28px;
     text-align: center;
@@ -160,6 +180,12 @@ iframe{
     z-index: 1;
 }
 #overlapped_objects {
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    z-index: 1;
+}
+#overlapped_power_strip {
     position: absolute;
     top: 100px;
     left: 100px;
@@ -255,6 +281,13 @@ input:checked + .slider:before {
     display: flex;
     flex-direction: column;    
     visibility: hidden;
+}
+.power-strip-container {
+    display: flex;
+    flex-direction: column;    
+    visibility: hidden;
+    align-items: center;
+    justify-content: center;
 }
 .objects-container {
     display: flex;

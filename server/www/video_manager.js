@@ -40,4 +40,5 @@ function hide_image(){
     wifi_info.style.visibility = "hidden";
     alimelo_info.style.visibility = "hidden";
     connected_objects_info.style.visibility = "hidden";
+    power_strip_info.style.visibility = "hidden";
 }

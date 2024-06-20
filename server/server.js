@@ -37,6 +37,10 @@ app.post('/status', function(request, response){
   console.log("Power Outlet 1 powered: " + request.body.po1_powered);
   console.log("Power Outlet 2 status: " + request.body.po2_status);
   console.log("Power Outlet 2 powered: " + request.body.po2_powered);
+  console.log("Power Strip relay 1 status: " + request.body.power_strip_relay1_status);
+  console.log("Power Strip relay 2 status: " + request.body.power_strip_relay2_status);
+  console.log("Power Strip relay 3 status: " + request.body.power_strip_relay3_status);
+  console.log("Power Strip relay 4 status: " + request.body.power_strip_relay4_status);  
   console.log("Energy limitations: " + request.body.energy_limitations);
 
   if(request.body.use_situation == "DEEP_SLEEP"){
@@ -72,6 +76,13 @@ app.post('/status', function(request, response){
     Boolean(strictBoolean(request.body.po0_status)),
     Boolean(strictBoolean(request.body.po1_status)),
     Boolean(strictBoolean(request.body.po2_status)),
+  );
+  io.sockets.emit(
+    "power_strip_status", 
+    Boolean(strictBoolean(request.body.power_strip_relay1_status)),
+    Boolean(strictBoolean(request.body.power_strip_relay2_status)),
+    Boolean(strictBoolean(request.body.power_strip_relay3_status)),
+    Boolean(strictBoolean(request.body.power_strip_relay4_status)),
   );
   response.send(request.body);    // echo the result back
 });

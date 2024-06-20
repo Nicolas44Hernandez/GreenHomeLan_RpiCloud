@@ -11,6 +11,7 @@
     <script defer src="alarm_manager.js"></script>
     <script defer src="wifi_manager.js"></script>
     <script defer src="alimelo_manager.js"></script>
+    <script defer src="power_strip_manager.js"></script>
     <script defer src="objects_manager.js"></script>
     <script defer src="use_situations_manager.js"></script>
     <script defer src="header.js"></script>    
@@ -44,10 +45,15 @@
                                 </span>                
                             </div>  
                             <div class="column column-icon column-icon-video">
+                                <span id="icon-power-strip">
+                                    <i class="fa-solid fa-minus-square"></i>
+                                </span>                
+                            </div>  
+                            <div class="column column-icon column-icon-video">
                                 <span id="icon-plug">
                                     <i class="fa-solid fa-plug"></i>
                                 </span>                
-                            </div>  
+                            </div>
                             <div class="column column-icon column-icon-video">
                                 <span id="icon-objects">
                                     <i class="fa-solid fa-clipboard"></i>
@@ -129,7 +135,86 @@
                             </label>
                         </div>                        
                     </div>                         
-                </div>    
+                </div>  
+                <div id="overlapped_power_strip" class="power-strip-container">
+                    <p class="power-strip-info-header">Power strip </p>  
+                    <!-- Power outlet 1 info -->
+                    <div class="row">
+                        <div class="column">
+                            <div class="column-power-outlet">
+                                <p id ="power-strip-outlet-1" class="power-strip-relay-info">Outlet 1</p>
+                            </div>
+                        </div>   
+                        <div class="column">
+                            <label class="switch">
+                                <input type="checkbox" id="toogle-power-strip-outlet-1">
+                                <span class="slider"></span>
+                            </label>
+                        </div>   
+                        <div class="column">
+                            <span id="spinner-power-strip-outlet-1">
+                                <i class="fa-solid fa-spinner spinner"></i>
+                            </span> 
+                        </div> 
+                    </div>
+                    <!-- Power outlet 2 info -->
+                    <div class="row">
+                        <div class="column">
+                            <div class="column-power-outlet">
+                                <p id ="power-strip-outlet-2" class="power-strip-relay-info">Outlet 2</p>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <label class="switch">
+                                <input type="checkbox" id="toogle-power-strip-outlet-2">
+                                <span class="slider"></span>
+                            </label>
+                        </div>  
+                        <div class="column">
+                            <span id="spinner-power-strip-outlet-2">
+                                <i class="fa-solid fa-spinner spinner"></i>
+                            </span> 
+                        </div> 
+                    </div>
+                    <!-- Power outlet 3 info -->
+                    <div class="row">
+                        <div class="column">
+                            <div class="column-power-outlet">
+                                <p id ="power-strip-outlet-3" class="power-strip-relay-info">Outlet 3</p>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <label class="switch">
+                                <input type="checkbox" id="toogle-power-strip-outlet-3">
+                                <span class="slider"></span>
+                            </label>
+                        </div>  
+                        <div class="column">
+                            <span id="spinner-power-strip-outlet-3">
+                                <i class="fa-solid fa-spinner spinner"></i>
+                            </span> 
+                        </div> 
+                    </div>
+                    <!-- Power outlet 4 info -->
+                    <div class="row">
+                        <div class="column">
+                            <div class="column-power-outlet">
+                                <p id ="power-strip-outlet-4" class="power-strip-relay-info">Outlet 4</p>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <label class="switch">
+                                <input type="checkbox" id="toogle-power-strip-outlet-4">
+                                <span class="slider"></span>
+                            </label>
+                        </div>  
+                        <div class="column">
+                            <span id="spinner-power-strip-outlet-4">
+                                <i class="fa-solid fa-spinner spinner"></i>
+                            </span> 
+                        </div> 
+                    </div>
+                </div>
                 <div id="overlapped_alimelo" class="alimelo-container">
                     <p class="energy-info-header">Energy</p>  
                     <!-- Electrical outlets info -->
@@ -240,7 +325,7 @@
                             </div>                                               
                         </div>
                     </div> 
-                </div>  
+                </div> 
                 <div id="overlapped_objects" class="objects-container">
                     <p class="objects-info-header">Connected Objects</p>  
                     <div>

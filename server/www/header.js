@@ -7,6 +7,7 @@ home_icon = document.getElementById("icon-home");
 wifi_icon = document.getElementById("icon-wifi");
 video_icon = document.getElementById("icon-video");
 plug_icon = document.getElementById("icon-plug");
+power_strip_icon = document.getElementById("icon-power-strip");
 objects_icon = document.getElementById("icon-objects");
 alimelo_battery_100_icon = document.getElementById("icon-alimelo-battery-100");
 alimelo_battery_75_icon = document.getElementById("icon-alimelo-battery-75");
@@ -24,6 +25,8 @@ video_icon.style.visibility = "visible";
 video_icon.style.color = "gray";
 plug_icon.style.visibility = "visible";
 plug_icon.style.color = "gray";
+power_strip_icon.style.visibility = "visible";
+power_strip_icon.style.color = "gray";
 objects_icon.style.visibility = "visible";
 objects_icon.style.color = "gray";
 
@@ -43,6 +46,7 @@ alimelo_battery_0_icon.style.color = "red";
 video_stream_frame = document.getElementById("frame")
 overlay_wifi = document.getElementById('overlapped_wifi');
 overlay_alimelo = document.getElementById('overlapped_alimelo');
+overlay_power_strip = document.getElementById('overlapped_power_strip');
 overlay_objects = document.getElementById('overlapped_objects');
 const iframeRect = video_stream_frame.getBoundingClientRect();
 
@@ -58,6 +62,12 @@ overlay_alimelo.style.left = iframeRect.left + 'px';
 overlay_alimelo.style.width = iframeRect.width + 'px';
 overlay_alimelo.style.height = iframeRect.height + 'px';
 
+// Set power strip overlapped container dimensions
+overlay_power_strip.style.top = iframeRect.top + 'px';
+overlay_power_strip.style.left = iframeRect.left + 'px';
+overlay_power_strip.style.width = iframeRect.width + 'px';
+overlay_power_strip.style.height = iframeRect.height + 'px';
+
 // Set connected objects overlapped container dimensions
 overlay_objects.style.top = iframeRect.top + 'px';
 overlay_objects.style.left = iframeRect.left + 'px';
@@ -71,6 +81,7 @@ function clear_header_icons(){
     video_icon.style.color = "gray";
     wifi_icon.style.color = "gray";
     plug_icon.style.color = "gray";
+    power_strip_icon.style.color = "gray";
     objects_icon.style.comor = "gray";
 }
 
@@ -102,7 +113,11 @@ function set_buttons_on_click(){
     plug_icon.onclick = function(){
         hide_image();
         alimelo_info.style.visibility = "visible";
-    }    
+    }  
+    power_strip_icon.onclick = function(){
+        hide_image();
+        power_strip_info.style.visibility = "visible";
+    }
     objects_icon.onclick = function(){
         hide_image();
         connected_objects_info.style.visibility = "visible";
@@ -144,6 +159,15 @@ socket.on("power_received", (energy_limitations) => {
     }
     else{
         plug_icon.style.color = "red";
+    }
+});
+
+socket.on("power_strip_status", (relay1_status, relay2_status, relay3_status, relay4_status) => { 
+    if((relay1_status == "unknown") || (relay2_status == "unknown") || (relay3_status == "unknown") || (relay4_status == "unknown")){
+        power_strip_icon.style.color = "red";
+    }
+    else {
+        power_strip_icon.style.color = "green";
     }
 });
 
