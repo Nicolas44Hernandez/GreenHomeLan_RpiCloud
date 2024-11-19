@@ -90,13 +90,13 @@ function set_wifi_band_status(band, new_status){
     spinner_wifi.style.visibility = "visible";
     
     // query params
-    const params = {status: new_status};    
+    const params = base_wifi_url.includes("api") ? {band: band, status: new_status} : {status: new_status};
     // convert the object to a query string
     const queryString = Object.entries(params)
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-    .join('&');
+        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+        .join('&');
     // construct the final URL with the query string
-    const url = `${base_wifi_url}/bands/${band}?${queryString}`;
+    const url = base_wifi_url.includes("api") ? `${base_wifi_url}/bands?${queryString}`: `${base_wifi_url}/bands/${band}?${queryString}`;
     console.log("url: "+ url);
     
     if(url.length > (queryString.length + 17)){
