@@ -53,8 +53,7 @@ action4 = {"id": -1, "name": ""};
 retreived = false;
 
 // Retrieve actions list and current configured actions periodically 
-// TODO: reactivate when reactivate use case
-//setInterval(retreive_actions_list, 5000);
+setInterval(retreive_actions_list, 10000);
 
 // configure dropdowns
 dropdownButton1.addEventListener('click', () => {
